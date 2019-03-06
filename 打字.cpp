@@ -6,24 +6,24 @@
 #include <windows.h>
 
 time_t start,end;
-int hour = 0, minl = 0, sec = 0,time_1=0,end_1=0;//Ê±¼ä
+int hour = 0, minl = 0, sec = 0,time_1=0,end_1=0;//æ—¶é—´
 int c1=0;
 
-void recite(char word[],int flag);//´òÓ¡ÎÄ×Ö
-void menu();//Ö÷²Ëµ¥
-void display();//´òÓ¡½á¹û
+void recite(char word[],int flag);//æ‰“å°æ–‡å­—
+void menu();//ä¸»èœå•
+void display();//æ‰“å°ç»“æœ
 
 static void setPos(int x,int y)
 {
 
-   COORD point = {x,y};//¹â±êÒªÉèÖÃµÄÎ»ÖÃx,y
-   HANDLE HOutput = GetStdHandle(STD_OUTPUT_HANDLE);//Ê¹ÓÃGetStdHandle(STD_OUTPUT_HANDLE)À´»ñÈ¡±ê×¼Êä³öµÄ¾ä±ú
-   SetConsoleCursorPosition(HOutput, point);//ÉèÖÃ¹â±êÎ»ÖÃ
+   COORD point = {x,y};//å…‰æ ‡è¦è®¾ç½®çš„ä½ç½®x,y
+   HANDLE HOutput = GetStdHandle(STD_OUTPUT_HANDLE);//ä½¿ç”¨GetStdHandle(STD_OUTPUT_HANDLE)æ¥è·å–æ ‡å‡†è¾“å‡ºçš„å¥æŸ„
+   SetConsoleCursorPosition(HOutput, point);//è®¾ç½®å…‰æ ‡ä½ç½®
 }
 
 
 
-//´òÓ¡ÎÄÕÂ
+//æ‰“å°æ–‡ç« 
 void look(char *st,int flag)
 {
 	FILE *fp;
@@ -54,7 +54,7 @@ void look(char *st,int flag)
 
 
 
-//´ò×ÖÄ£¿é
+//æ‰“å­—æ¨¡å—
 void recite(char word[],int flag)
 {
     char word_1[100];
@@ -68,8 +68,8 @@ void recite(char word[],int flag)
 		Sleep(1000);
 		system("cls");
 	}
-   printf("\t\t\t\t¡ñÏÖÔÚ¿ªÊ¼\n\n");
-	system("cls");//ÇåÆÁ
+   printf("\t\t\t\tâ—ç°åœ¨å¼€å§‹\n\n");
+	system("cls");//æ¸…å±
 	sec=start;
 	printf("\n\n\t\t\t\t");
 	sec=0;
@@ -87,15 +87,15 @@ void recite(char word[],int flag)
 		}
 		if(hour==24)
 			hour=0; 
-       printf("\t\t¡ñ¡ôÓÃÊ±£º%02d:%02d:%02d   \t",hour, minl, sec);//%02dÊä³ö³¤¶ÈÎª2£¬²»×ã2Ç°Ãæ²¹0
-	   	printf("¡ñ¡ôÕıÈ·ÂÊ:%.3f\t¡ñ¡ôËÙÂÊ%.3f\n",(c1/100)*100,(i/100)*100);
+       printf("\t\tâ—â—†ç”¨æ—¶ï¼š%02d:%02d:%02d   \t",hour, minl, sec);//%02dè¾“å‡ºé•¿åº¦ä¸º2ï¼Œä¸è¶³2å‰é¢è¡¥0
+	   	printf("â—â—†æ­£ç¡®ç‡:%.3f\tâ—â—†é€Ÿç‡%.3f\n",(c1/100)*100,(i/100)*100);
 	   if(!flag)
 	   {
 		   if(minl==time_1)
 		   {
-			    printf("\n\n\t\t\t\tÌôÕ½Ê§°Ü£¡\n\n");
-			    printf("\n\n\t\t\t\t<1> ¼ÌĞø\t<2> ÍË³ö\n");
-			    printf("\n\t\t\t\t\tÇëÑ¡Ôñ£º");
+			    printf("\n\n\t\t\t\tæŒ‘æˆ˜å¤±è´¥ï¼\n\n");
+			    printf("\n\n\t\t\t\t<1> ç»§ç»­\t<2> é€€å‡º\n");
+			    printf("\n\t\t\t\t\tè¯·é€‰æ‹©ï¼š");
 		         scanf("%d",&r);
 				 	if(r==2)
 					{
@@ -139,29 +139,29 @@ void recite(char word[],int flag)
 
 
 	
-//´òÓ¡·ÖÊıÄ£¿é
+//æ‰“å°åˆ†æ•°æ¨¡å—
 void display()
 {
 	
-	printf("\t\t\t\t\t¡ñ¡ôÕıÈ·ÂÊ:%.3f\n",(c1/100)*100);
-	printf("\t\t\t\t\t¡ñ¡ôÓÃÊ±£º\n");
+	printf("\t\t\t\t\tâ—â—†æ­£ç¡®ç‡:%.3f\n",(c1/100)*100);
+	printf("\t\t\t\t\tâ—â—†ç”¨æ—¶ï¼š\n");
 	printf("\t\t\t\t\t\t__________________\n");
-    printf("\t\t\t\t\t\t%02d:%02d:%02d   \n",hour, minl, sec);//%02dÊä³ö³¤¶ÈÎª2£¬²»×ã2Ç°Ãæ²¹0
+    printf("\t\t\t\t\t\t%02d:%02d:%02d   \n",hour, minl, sec);//%02dè¾“å‡ºé•¿åº¦ä¸º2ï¼Œä¸è¶³2å‰é¢è¡¥0
     printf("\t\t\t\t\t\t_________________\n\n");
     if(c1==100)
-		printf("\t\t\t\t\t¡ñ¡ôÄãÒÑ´ïµ½10¼¶£¡¡ñ¡ô");
+		printf("\t\t\t\t\tâ—â—†ä½ å·²è¾¾åˆ°10çº§ï¼â—â—†");
 	else
-		printf("\t\t\t\t\t¡ñ¡ôbaby,»¹Òª¼ÌĞøÅ¬Á¦Å¶!¡ñ¡ô\n");
+		printf("\t\t\t\t\tâ—â—†baby,è¿˜è¦ç»§ç»­åŠªåŠ›å“¦!â—â—†\n");
 }
 
  
 
-//´ò×Ö½á¹û±£³ÖÔÚÎÄ¼şÖĞ
+//æ‰“å­—ç»“æœä¿æŒåœ¨æ–‡ä»¶ä¸­
 void wrongtxt(char word_2[])
 {
 	FILE *fp;
 	int i=0;
-	if((fp=fopen("´ò×Ö½á¹û.txt","a+"))==NULL)
+	if((fp=fopen("æ‰“å­—ç»“æœ.txt","a+"))==NULL)
 	{
 		printf("can't open this file\n");
 		exit(0);
@@ -176,11 +176,11 @@ void wrongtxt(char word_2[])
 
 
    
-//¸ù¾İÑ¡ÔñÕâ¸öÖĞÎÄµÄÎÄÕÂ£¬Ñ¡Ôñ²»Í¬ÎÄ¼ş
+//æ ¹æ®é€‰æ‹©è¿™ä¸ªä¸­æ–‡çš„æ–‡ç« ï¼Œé€‰æ‹©ä¸åŒæ–‡ä»¶
 void ch_1(int no,int flag)
 {
 	char *str;
-	printf("\t\t\t\tÌôÕ½ÂíÉÏ¿ªÊ¼À²\n\n");
+	printf("\t\t\t\tæŒ‘æˆ˜é©¬ä¸Šå¼€å§‹å•¦\n\n");
 	switch(no)
 	{
     	case 1:str="word1.txt";look(str, flag);break;
@@ -194,11 +194,11 @@ void ch_1(int no,int flag)
 
 }
 
-//¸ù¾İÑ¡ÔñÓ¢ÎÄµÄÎÄÕÂ£¬Ñ¡Ôñ²»Í¬ÎÄ¼ş
+//æ ¹æ®é€‰æ‹©è‹±æ–‡çš„æ–‡ç« ï¼Œé€‰æ‹©ä¸åŒæ–‡ä»¶
 void ch_2(int no,int flag)
 {
 	char *str;
-	printf("\t\t\t\tÌôÕ½ÂíÉÏ¿ªÊ¼À²\n\n");
+	printf("\t\t\t\tæŒ‘æˆ˜é©¬ä¸Šå¼€å§‹å•¦\n\n");
 	switch(no)
 	{
     	case 1:str="eword1.txt";look(str, flag);break;
@@ -212,68 +212,68 @@ void ch_2(int no,int flag)
 
 }
 
-//ÖĞÎÄÄ¿Â¼
+//ä¸­æ–‡ç›®å½•
 void chin_menu()
 {
 	int i;
-	printf("\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x\n\n");
-	printf("\t\t\t\t¨†       1 Ã»ÓĞ±È½Å¸ü³¤µÄÂ·           ¨†\n\n");
-	printf("\t\t\t\t¨†       2 ÔµÆğ²»Ãğ                   ¨†\n\n");
-	printf("\t\t\t\t¨†       3 ÆÆÎÍ¾ÈÈË                   ¨†\n\n");
-	printf("\t\t\t\t¨†       4 ´ºÒâ,°µÏã                  ¨†\n\n");
-	printf("\t\t\t\t¨†       5 ÄãµÄÊÀ½çÎÒ×îÃÀ             ¨†\n\n");
-	printf("\t\t\t\t¨†       6 Ñô´ºÈıÔÂ                   ¨†\n\n");
-	printf("\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰  \n\n");
-	printf("\t\t\t\tÇëÑ¡ÔñÎÄÕÂ£º");
+	printf("\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–\n\n");
+	printf("\t\t\t\tâ–       1 æ²¡æœ‰æ¯”è„šæ›´é•¿çš„è·¯           â–\n\n");
+	printf("\t\t\t\tâ–       2 ç¼˜èµ·ä¸ç­                   â–\n\n");
+	printf("\t\t\t\tâ–       3 ç ´ç“®æ•‘äºº                   â–\n\n");
+	printf("\t\t\t\tâ–       4 æ˜¥æ„,æš—é¦™                  â–\n\n");
+	printf("\t\t\t\tâ–       5 ä½ çš„ä¸–ç•Œæˆ‘æœ€ç¾             â–\n\n");
+	printf("\t\t\t\tâ–       6 é˜³æ˜¥ä¸‰æœˆ                   â–\n\n");
+	printf("\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”  \n\n");
+	printf("\t\t\t\tè¯·é€‰æ‹©æ–‡ç« ï¼š");
 	scanf("%d",&i);
 	ch_1(i,1);
 }
-//Ó¢ÎÄÄ¿Â¼
+//è‹±æ–‡ç›®å½•
 void eng_menu()
 {
 	int i;
-	printf("\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x\n\n");
-	printf("\t\t\t\t¨†       1 ÇàÍ­           ¨†\n\n");
-	printf("\t\t\t\t¨†       2 °×Òø           ¨†\n\n");
-	printf("\t\t\t\t¨†       3 »Æ½ğ           ¨†\n\n");
-	printf("\t\t\t\t¨†       4 ²¬½ğ           ¨†\n\n");
-	printf("\t\t\t\t¨†       5 ×êÊ¯           ¨†\n\n");
-	printf("\t\t\t\t¨†       6 »Æ½ğ           ¨†\n\n");
-	printf("\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰\n\n");
-	printf("\t\t\t\tÇëÑ¡ÔñÎÄÕÂ£º");
+	printf("\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–\n\n");
+	printf("\t\t\t\tâ–       1 é’é“œ           â–\n\n");
+	printf("\t\t\t\tâ–       2 ç™½é“¶           â–\n\n");
+	printf("\t\t\t\tâ–       3 é»„é‡‘           â–\n\n");
+	printf("\t\t\t\tâ–       4 é“‚é‡‘           â–\n\n");
+	printf("\t\t\t\tâ–       5 é’»çŸ³           â–\n\n");
+	printf("\t\t\t\tâ–       6 é»„é‡‘           â–\n\n");
+	printf("\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”\n\n");
+	printf("\t\t\t\tè¯·é€‰æ‹©æ–‡ç« ï¼š");
 	scanf("%d",&i);
 	ch_2(i,1);
 }
 
 
 
-//ÌôÕ½ÆÀÓï
+//æŒ‘æˆ˜è¯„è¯­
 void jump()
 {
 	if(minl<time_1&&c1==100)
-				  printf("\t\t\t\t\t¡ñ¡ôÌôÕ½³É¹¦¡ñ¡ô\n");
+				  printf("\t\t\t\t\tâ—â—†æŒ‘æˆ˜æˆåŠŸâ—â—†\n");
     else 
-                  printf("\t\t\t\t\t¡ñ¡ôºÜÒÅº¶£¬ÌôÕ½Ê§°Ü£¡¡ñ¡ô\n");
+                  printf("\t\t\t\t\tâ—â—†å¾ˆé—æ†¾ï¼ŒæŒ‘æˆ˜å¤±è´¥ï¼â—â—†\n");
 }
 
 
-//ÌôÕ½Ä£¿é
+//æŒ‘æˆ˜æ¨¡å—
 void challeng()
 {
-	int i,choice1;
+	int choice1;
     printf("\t\t\t\t_____________________________________________________________________\n");
-	printf("\t\t\t\t|   ÎÂÜ°ÌáÊ¾£ºÇëÑ¡Ôñ²»Í¬µÄµÈ¼¶£¬ÔÚ¹æ¶¨µÄÊ±¼äÖĞÈ«²¿´òÓ¡Íê£¬ÖĞÎÄÊäÈëÇë |\n");
-	printf("\t\t\t\t|             ×ÔĞĞ¸Ä±äÊäÈë·¨,Ô½ÍùÏÂÄÑ¶ÈÔ½¸ß                          |\n");
+	printf("\t\t\t\t|   æ¸©é¦¨æç¤ºï¼šè¯·é€‰æ‹©ä¸åŒçš„ç­‰çº§ï¼Œåœ¨è§„å®šçš„æ—¶é—´ä¸­å…¨éƒ¨æ‰“å°å®Œï¼Œä¸­æ–‡è¾“å…¥è¯· |\n");
+	printf("\t\t\t\t|             è‡ªè¡Œæ”¹å˜è¾“å…¥æ³•,è¶Šå¾€ä¸‹éš¾åº¦è¶Šé«˜                          |\n");
 	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
-	printf("\t\t\t\t¡ñ¡ô»¶Ó­½øÈëÌôÕ½Ä£¿é£¬×£ÄãºÃÔË!¡ñ¡ô\n\n");
+	printf("\t\t\t\tâ—â—†æ¬¢è¿è¿›å…¥æŒ‘æˆ˜æ¨¡å—ï¼Œç¥ä½ å¥½è¿!â—â—†\n\n");
 
-	printf("\t\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x \n\n");
-	printf("\t\t\t\t\t¨†   1   Æ´Òô´ò×Ö              ¨†\n\n");
-	printf("\t\t\t\t\t¨†   2   Ó¢Óï´ò×Ö              ¨†\n\n");
-	printf("\t\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰ \n\n");
-	printf("\t\t\t\tÇëÑ¡Ôñ£º\n");
+	printf("\t\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â– \n\n");
+	printf("\t\t\t\t\tâ–   1   æ‹¼éŸ³æ‰“å­—              â–\n\n");
+	printf("\t\t\t\t\tâ–   2   è‹±è¯­æ‰“å­—              â–\n\n");
+	printf("\t\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–” \n\n");
+	printf("\t\t\t\tè¯·é€‰æ‹©ï¼š\n");
 	scanf("%d",&choice1);	
-	printf("\n\n\t\t\t\tÇëÊäÈëÄãÒªÌôÕ½µÄ·ÖÖÓÊı£º");
+	printf("\n\n\t\t\t\tè¯·è¾“å…¥ä½ è¦æŒ‘æˆ˜çš„åˆ†é’Ÿæ•°ï¼š");
 	scanf("%d",&time_1);
 	switch(choice1)
 	{
@@ -281,30 +281,26 @@ void challeng()
 		case 2: eng_menu();break;
 		default:menu();break;
 	}
-	switch(choice1)
-	{
-    	case 1:ch_1(i,0);break;
-		case 2:ch_2(i,0);break;
-	}
+	
 	
     jump();
 
 }
 
 
-//Ñ¡ÔñÄ£¿é
+//é€‰æ‹©æ¨¡å—
 void getchoice()
 {
-	printf("\t\t\t\t\t¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô\n\n");
-	printf("\t\t\t\t\t¡ñ   1 Ëæ»úÄ£Ê½           ¡ñ\n\n");
-    printf("\t\t\t\t\t¡ñ   2 Ñ¡ÔñÄ£Ê½           ¡ñ\n\n");
-	printf("\t\t\t\t\t¡ñ   3 ÌôÕ½Ä£Ê½           ¡ñ\n\n");
-	printf("\t\t\t\t\t¡ñ   0 ÍË³ö               ¡ñ\n\n");
-	printf("\t\t\t\t\t¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô\n\n\n");
-	printf("\t\t\t\t\tÇëÑ¡Ôñ£º\n");
+	printf("\t\t\t\t\tâ—â—†â—â—†â—â—†â—â—†â—â—†â—â—†â—â—†\n\n");
+	printf("\t\t\t\t\tâ—   1 éšæœºæ¨¡å¼           â—\n\n");
+    printf("\t\t\t\t\tâ—   2 é€‰æ‹©æ¨¡å¼           â—\n\n");
+	printf("\t\t\t\t\tâ—   3 æŒ‘æˆ˜æ¨¡å¼           â—\n\n");
+	printf("\t\t\t\t\tâ—   0 é€€å‡º               â—\n\n");
+	printf("\t\t\t\t\tâ—â—†â—â—†â—â—†â—â—†â—â—†â—â—†â—â—†\n\n\n");
+	printf("\t\t\t\t\tè¯·é€‰æ‹©ï¼š\n");
 }
 
-//Ñ¡ÔñÎÄÕÂ
+//é€‰æ‹©æ–‡ç« 
 void choose(int choice1)
 {
 	switch(choice1)
@@ -314,23 +310,23 @@ void choose(int choice1)
 	 }
 }
 
-//Ö÷²Ëµ¥
+//ä¸»èœå•
 void menu()
 {
 	int choice,choice1,N;
 	srand(time(NULL));
-	printf("\n\n\n\n\t\t\t¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ\n");
-	printf("\t\t\t¡õ                           »¶Ó­½øÈë´ò×Ö³ÌĞò                             ¡õ\n");
-	printf("\t\t\t¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ\n\n\n");
-	printf("\t\t\t\t¡ñ¡ôÑ§Ï°Ê¹Äã¿ìÀÖ£¬ÈÃÎÒÃÇÒ»Æğ¿ìÀÖÑ§Ï°°É£¡¡ñ¡ô                \n\n\n");
-	getchoice();//Ñ¡ÔñÄ£¿é
+	printf("\n\n\n\n\t\t\tâ–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡\n");
+	printf("\t\t\tâ–¡                           æ¬¢è¿è¿›å…¥æ‰“å­—ç¨‹åº                             â–¡\n");
+	printf("\t\t\tâ–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡\n\n\n");
+	printf("\t\t\t\tâ—â—†å­¦ä¹ ä½¿ä½ å¿«ä¹ï¼Œè®©æˆ‘ä»¬ä¸€èµ·å¿«ä¹å­¦ä¹ å§ï¼â—â—†                \n\n\n");
+	getchoice();//é€‰æ‹©æ¨¡å—
 	scanf("%d",&choice1);
 	system("cls");
-	printf("\t\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x\n\n");
-	printf("\t\t\t\t\t¨†   1   Æ´Òô´ò×Ö              ¨†\n\n");
-	printf("\t\t\t\t\t¨†   2   Ó¢Óï´ò×Ö              ¨†\n\n");
-	printf("\t\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰\n\n");
-	printf("\t\t\t\tÇëÑ¡Ôñ£º\n");
+	printf("\t\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–\n\n");
+	printf("\t\t\t\t\tâ–   1   æ‹¼éŸ³æ‰“å­—              â–\n\n");
+	printf("\t\t\t\t\tâ–   2   è‹±è¯­æ‰“å­—              â–\n\n");
+	printf("\t\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”\n\n");
+	printf("\t\t\t\tè¯·é€‰æ‹©ï¼š\n");
 	scanf("%d",&choice);
 	system("cls");
 	switch(choice1)
@@ -351,19 +347,19 @@ void menu()
 void tshi()
 {
 	printf("\t\t\t\t_____________________________________________________________________\n");
-	printf("\t\t\t\t|   ÎÂÜ°ÌáÊ¾£ºÔÚ²Ù×÷ÖĞ°´0»Øµ½Ö÷²Ëµ¥£¬ÊäÈëÕıÈ·µÄÊı×Ö½øÈëÏàÓ¦µÄ³ÌĞò    |\n");
-	printf("\t\t\t\t|              ÊäÈëµ¥´Êºó°´enter¼ü¼ÌĞø                               |\n");
+	printf("\t\t\t\t|   æ¸©é¦¨æç¤ºï¼šåœ¨æ“ä½œä¸­æŒ‰0å›åˆ°ä¸»èœå•ï¼Œè¾“å…¥æ­£ç¡®çš„æ•°å­—è¿›å…¥ç›¸åº”çš„ç¨‹åº    |\n");
+	printf("\t\t\t\t|              è¾“å…¥å•è¯åæŒ‰enteré”®ç»§ç»­                               |\n");
 	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
 }
 
-//Ïß³ÌÎÊÌâ
+//çº¿ç¨‹é—®é¢˜
 /*int in_gore(void *pdata)
 {
 	mydata * pd=(mydata*)pdata;
     while (1)
 	{
-        Sleep(1000);//ÔİÍ£1s
-        system("cls");//ÇåÆÁ
+        Sleep(1000);//æš‚åœ1s
+        system("cls");//æ¸…å±
         pd->sec=pd->sec+1;
         if (pd->sec == 60)
 		{
@@ -379,7 +375,7 @@ void tshi()
             pd->hour = 0;
         }
         printf("\t\t\t\t\t\t%02d:%02d:%02d\n", pd->hour, pd->min, pd->sec);
-        //%02dÊä³ö³¤¶ÈÎª2£¬²»×ã2Ç°Ãæ²¹0
+        //%02dè¾“å‡ºé•¿åº¦ä¸º2ï¼Œä¸è¶³2å‰é¢è¡¥0
     }
     return 0;
 }*/
