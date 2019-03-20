@@ -6,79 +6,38 @@
 #include <windows.h>
 
 time_t start,end;
-int hour = 0, minl = 0, sec = 0,time_1=0,end_1=0;//æ—¶é—´
+int hour = 0, minl = 0, sec = 0,time_1=0,end_1=0;//Ê±¼ä
 int c1=0;
 
-void recite(char word[],int flag);//æ‰“å°æ–‡å­—
-void menu();//ä¸»èœå•
-void display();//æ‰“å°ç»“æœ
+void recite(char word[4][26],int flag);//´òÓ¡ÎÄ×Ö
+void menu();//Ö÷²Ëµ¥
+void display1();//´òÓ¡½á¹û
+void main();
 
 static void setPos(int x,int y)
 {
 
-   COORD point = {x,y};//å…‰æ ‡è¦è®¾ç½®çš„ä½ç½®x,y
-   HANDLE HOutput = GetStdHandle(STD_OUTPUT_HANDLE);//ä½¿ç”¨GetStdHandle(STD_OUTPUT_HANDLE)æ¥è·å–æ ‡å‡†è¾“å‡ºçš„å¥æŸ„
-   SetConsoleCursorPosition(HOutput, point);//è®¾ç½®å…‰æ ‡ä½ç½®
+   COORD point = {x,y};//¹â±êÒªÉèÖÃµÄÎ»ÖÃx,y
+   HANDLE HOutput = GetStdHandle(STD_OUTPUT_HANDLE);//Ê¹ÓÃGetStdHandle(STD_OUTPUT_HANDLE)À´»ñÈ¡±ê×¼Êä³öµÄ¾ä±ú
+   SetConsoleCursorPosition(HOutput, point);//ÉèÖÃ¹â±êÎ»ÖÃ
 }
 
 
+void color(short x) //×Ô¶¨Òåº¯¸ù¾İ²ÎÊı¸Ä±äÑÕÉ«   
+{  
+    if(x>=0 && x<=15)//²ÎÊıÔÚ0-15µÄ·¶Î§ÑÕÉ«  
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);    //Ö»ÓĞÒ»¸ö²ÎÊı£¬¸Ä±ä×ÖÌåÑÕÉ«   
+    else//Ä¬ÈÏµÄÑÕÉ«°×É«  
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);  
+}  
 
-//æ‰“å°æ–‡ç« 
-void look(char *st,int flag)
+
+void time1()
 {
-	FILE *fp;
-	char word[100];
-	int i=0;
-	memset(word,0,sizeof(char)*100);
-	if((fp=fopen(st,"r+"))==NULL)
-	{
-		printf("can't open this file\n");
-		exit(0);
-	}
-	while(i<100)
-	{
-		if(fscanf(fp,"%c",word+i)!=EOF)
-		{
-			i++;
-		}
-	}
-	fclose(fp);
-    recite(word,flag);
-}
-
-
-
-
-
-
-
-
-
-//æ‰“å­—æ¨¡å—
-void recite(char word[],int flag)
-{
-    char word_1[100];
-	int i=0,row=0,r=0,k,col=0;
-	c1=0;
-	memset(word_1,0,sizeof(char)*100);
-	start=time(NULL);
-    for(sec=1;sec<=3;sec++)
-	{
-		printf("\t\t\t\t%d",sec);
-		Sleep(1000);
-		system("cls");
-	}
-   printf("\t\t\t\tâ—ç°åœ¨å¼€å§‹\n\n");
-	system("cls");//æ¸…å±
-	sec=start;
-	printf("\n\n\t\t\t\t");
-	sec=0;
-	for(i=0;i<100;i++)
-	{
-		if(sec==60)
+		while(sec>60)
 		{
 			minl++;
-			sec=0;
+			sec=sec-60;
 		}
 		if(minl==60)
 		{
@@ -87,15 +46,94 @@ void recite(char word[],int flag)
 		}
 		if(hour==24)
 			hour=0; 
-       printf("\t\tâ—â—†ç”¨æ—¶ï¼š%02d:%02d:%02d   \t",hour, minl, sec);//%02dè¾“å‡ºé•¿åº¦ä¸º2ï¼Œä¸è¶³2å‰é¢è¡¥0
-	   	printf("â—â—†æ­£ç¡®ç‡:%.3f\tâ—â—†é€Ÿç‡%.3f\n",(c1/100)*100,(i/100)*100);
+}
+//´òÓ¡ÎÄÕÂ
+void look(char *st,int flag)
+{
+	FILE *fp;
+	char word[4][26];
+	int col=0,row=0;
+	memset(word,0,sizeof(char)*4*26);
+	if((fp=fopen(st,"r+"))==NULL)
+	{
+		printf("can't open this file\n");
+		exit(0);
+	}
+	while(row<4)
+	{
+		for(col=0;col<25;col++)
+		{
+			if(fscanf(fp,"%c",&word[row][col])!=EOF)
+			{}
+		}
+		row++;
+	}
+	fclose(fp);
+    recite(word,flag);
+}
+//Ä£°åÑùÊ½
+void zuanshi(char word[][26])
+{
+	int i=0;
+	printf("\n\n\n");
+	printf("\t\t\t       ©±©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·\n");
+	printf("\t\t\t       ©§      ½ğÉ½´ò×ÖÍ¨                     ©§ \n");
+	printf("\t\t\t       ©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿\n");
+	for(i=0;i<4;i++)
+	{
+	printf("\t\t\t       ©±©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·\n");
+	printf("\t\t\t       ©§%s                          \n",word[i]);
+	printf("\t\t\t       ©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿\n");
+	printf("\t\t\t       ©±©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©·\n");
+	printf("\t\t\t       ©§                            \n");
+	printf("\t\t\t       ©»©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¿\n");
+	}
+	
+	
+	
+
+	
+	
+	
+}
+
+
+
+
+
+
+
+//´ò×ÖÄ£¿é
+void recite(char word[4][26],int flag)
+{
+    char word_1[25][26];
+	int k=0,row=0,r=1,col=0,h=0;
+	c1=0;
+	memset(word_1,0,sizeof(char)*100);
+	for(sec=1;sec<=3;sec++)
+	{
+		printf("\t\t\t\t%d",sec);
+		Sleep(1000);
+		system("cls");
+	}
+   printf("\t\t\t\t¡ñÏÖÔÚ¿ªÊ¼\n\n");
+	system("cls");//ÇåÆÁ	
+	start=time(NULL);
+	sec=hour=minl=0;
+	col=0;
+	zuanshi(word);
+	for(k=0;k<4;k++)
+	{
+			setPos(20,9+h);
+			h+=6;
 	   if(!flag)
 	   {
 		   if(minl==time_1)
 		   {
-			    printf("\n\n\t\t\t\tæŒ‘æˆ˜å¤±è´¥ï¼\n\n");
-			    printf("\n\n\t\t\t\t<1> ç»§ç»­\t<2> é€€å‡º\n");
-			    printf("\n\t\t\t\t\tè¯·é€‰æ‹©ï¼š");
+			   system("cls");
+			    printf("\n\n\t\t\t\tÌôÕ½Ê§°Ü£¡\n\n");
+			    printf("\n\n\t\t\t\t<1> ¼ÌĞø\t<2> ÍË³ö\n");
+			    printf("\n\t\t\t\t\tÇëÑ¡Ôñ£º");
 		         scanf("%d",&r);
 				 	if(r==2)
 					{
@@ -104,64 +142,57 @@ void recite(char word[],int flag)
 					}
 		   }
 	   }
-	   printf("\t\t\t\t");
-	   for(k=0;k<100;k++)
+	   printf("\n\t\t\t\t");
+		        
+	   for(col=0;col<25;col++,row++)
 	   {
-	    	printf("%c",word[k]);
-		    if(k%25==0)
-			  printf("\n\n\t\t\t\t");
+		 
+		   scanf("%c",&word_1[k][col]);
+		   if(word[k][col]==word_1[k][col])
+		   {   color(2);
+			   c1++;
+		   }
+		   else
+			   color(4);
 	   }
-       for(k=0;k<i;k++)
-	   {
-	    	printf("%c",word_1[k]);
-		    if(k%25==0)
-			  printf("\n\n\t\t\t\t");
-	   }
-
-	   setPos(27+row,4+col);
-	   col+=1;
-	   scanf("%c",word_1+i);
-	   if(i%25==0)
-	   {
-		   printf("\n");
-		   row+=1;
-	   }
-		if(word[i]==word_1[i])
-		{
-			c1++;
-		}
+		
 		end=time(NULL);
-		end_1=sec=(int)difftime(end,start);
-		system("cls");
+	    sec=(int)difftime(end,start);
+		
 	}
-	display();
+	system("cls");
+	display1();
+
 }
 
 
 	
-//æ‰“å°åˆ†æ•°æ¨¡å—
-void display()
+//´òÓ¡·ÖÊıÄ£¿é
+void display1()
 {
 	
-	printf("\t\t\t\t\tâ—â—†æ­£ç¡®ç‡:%.3f\n",(c1/100)*100);
-	printf("\t\t\t\t\tâ—â—†ç”¨æ—¶ï¼š\n");
+	printf("\n\n\n\t\t\t\t\t¡ñ¡ôÕıÈ·ÂÊ:%.3f\n",(c1/100.0)*100);
+	printf("\t\t\t\t\t¡ñ¡ôÓÃÊ±£º\n");
+	time1();
 	printf("\t\t\t\t\t\t__________________\n");
-    printf("\t\t\t\t\t\t%02d:%02d:%02d   \n",hour, minl, sec);//%02dè¾“å‡ºé•¿åº¦ä¸º2ï¼Œä¸è¶³2å‰é¢è¡¥0
+    printf("\t\t\t\t\t\t%02d:%02d:%02d   \n",hour, minl, sec);//%02dÊä³ö³¤¶ÈÎª2£¬²»×ã2Ç°Ãæ²¹0
     printf("\t\t\t\t\t\t_________________\n\n");
     if(c1==100)
-		printf("\t\t\t\t\tâ—â—†ä½ å·²è¾¾åˆ°10çº§ï¼â—â—†");
+		printf("\t\t\t\t\t¡ñ¡ôÄãÒÑ´ïµ½10¼¶£¡¡ñ¡ô");
 	else
-		printf("\t\t\t\t\tâ—â—†baby,è¿˜è¦ç»§ç»­åŠªåŠ›å“¦!â—â—†\n");
+		printf("\t\t\t\t\t¡ñ¡ôbaby,»¹Òª¼ÌĞøÅ¬Á¦Å¶!¡ñ¡ô\n");
+	system("pause");
+    //system("cls");
 }
 
  
 
-//æ‰“å­—ç»“æœä¿æŒåœ¨æ–‡ä»¶ä¸­
+//´ò×Ö½á¹û±£³ÖÔÚÎÄ¼şÖĞ
 void wrongtxt(char word_2[])
 {
 	FILE *fp;
 	int i=0;
-	if((fp=fopen("æ‰“å­—ç»“æœ.txt","a+"))==NULL)
+	if((fp=fopen("´ò×Ö½á¹û.txt","a+"))==NULL)
 	{
 		printf("can't open this file\n");
 		exit(0);
@@ -176,190 +207,215 @@ void wrongtxt(char word_2[])
 
 
    
-//æ ¹æ®é€‰æ‹©è¿™ä¸ªä¸­æ–‡çš„æ–‡ç« ï¼Œé€‰æ‹©ä¸åŒæ–‡ä»¶
+//¸ù¾İÑ¡ÔñÕâ¸öÖĞÎÄµÄÎÄÕÂ£¬Ñ¡Ôñ²»Í¬ÎÄ¼ş
 void ch_1(int no,int flag)
 {
 	char *str;
-	printf("\t\t\t\tæŒ‘æˆ˜é©¬ä¸Šå¼€å§‹å•¦\n\n");
+	printf("\t\t\t\tÌôÕ½ÂíÉÏ¿ªÊ¼À²\n\n");
 	switch(no)
 	{
-    	case 1:str="word1.txt";look(str, flag);break;
-		case 2:str="word2.txt";look(str, flag);break;
-		case 3:str="word3.txt";look(str, flag);break;
-		case 4:str="word4.txt";look(str, flag);break;
-		case 5:str="word5.txt";look(str, flag);break;
-		case 6:str="word6.txt";look(str, flag);break;
+	case 1:{str="word_1.txt";look(str,flag);break;}
+	case 2:{str="word2.txt";look(str,flag);break;}
+	case 3:{str="word3.txt";look(str,flag);break;}
+	case 4:{str="word4.txt";look(str,flag);break;}
+	case 5:{str="word5.txt";look(str,flag);break;}
+	case 6:{str="word6.txt";look(str,flag);break;}
 	}
 	
 
 }
 
-//æ ¹æ®é€‰æ‹©è‹±æ–‡çš„æ–‡ç« ï¼Œé€‰æ‹©ä¸åŒæ–‡ä»¶
+//¸ù¾İÑ¡ÔñÓ¢ÎÄµÄÎÄÕÂ£¬Ñ¡Ôñ²»Í¬ÎÄ¼ş
 void ch_2(int no,int flag)
 {
 	char *str;
-	printf("\t\t\t\tæŒ‘æˆ˜é©¬ä¸Šå¼€å§‹å•¦\n\n");
+	printf("\t\t\t\tÌôÕ½ÂíÉÏ¿ªÊ¼À²\n\n");
 	switch(no)
 	{
-    	case 1:str="eword1.txt";look(str, flag);break;
-		case 2:str="eword2.txt";look(str, flag);break;
-		case 3:str="eword3.txt";look(str, flag);break;
-		case 4:str="eword4.txt";look(str, flag);break;
-		case 5:str="eword5.txt";look(str, flag);break;
-		case 6:str="eword6.txt";look(str, flag);break;
+	case 1:str="eword1.txt";look(str, flag);break;
+	case 2:str="eword2.txt";look(str, flag);break;
+	case 3:str="eword3.txt";look(str, flag);break;
+	case 4:str="eword4.txt";look(str, flag);break;
+	case 5:str="eword5.txt";look(str, flag);break;
+	case 6:str="eword6.txt";look(str, flag);break;
 	}
 	
 
 }
 
-//ä¸­æ–‡ç›®å½•
+void tshi_2()
+{
+	printf("\t\t\t\t_____________________________________________________________________\n");
+	printf("\t\t\t\t|   ÎÂÜ°ÌáÊ¾£ºÖĞÎÄÊäÈëÇë                                             |\n");
+	printf("\t\t\t\t|             ×ÔĞĞ¸Ä±äÊäÈë·¨,Ô½ÍùÏÂÄÑ¶ÈÔ½¸ß                          |\n");
+	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
+}
+//ÖĞÎÄÄ¿Â¼
 void chin_menu()
 {
 	int i;
-	printf("\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–\n\n");
-	printf("\t\t\t\tâ–       1 æ²¡æœ‰æ¯”è„šæ›´é•¿çš„è·¯           â–\n\n");
-	printf("\t\t\t\tâ–       2 ç¼˜èµ·ä¸ç­                   â–\n\n");
-	printf("\t\t\t\tâ–       3 ç ´ç“®æ•‘äºº                   â–\n\n");
-	printf("\t\t\t\tâ–       4 æ˜¥æ„,æš—é¦™                  â–\n\n");
-	printf("\t\t\t\tâ–       5 ä½ çš„ä¸–ç•Œæˆ‘æœ€ç¾             â–\n\n");
-	printf("\t\t\t\tâ–       6 é˜³æ˜¥ä¸‰æœˆ                   â–\n\n");
-	printf("\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”  \n\n");
-	printf("\t\t\t\tè¯·é€‰æ‹©æ–‡ç« ï¼š");
+	tshi_2();
+	Sleep(3000);
+	system("cls");
+	printf("\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x\n\n");
+	printf("\t\t\t\t¨†       1 Ã»ÓĞ±È½Å¸ü³¤µÄÂ·           ¨†\n\n");
+	printf("\t\t\t\t¨†       2 ÔµÆğ²»Ãğ                   ¨†\n\n");
+	printf("\t\t\t\t¨†       3 ÆÆÎÍ¾ÈÈË                   ¨†\n\n");
+	printf("\t\t\t\t¨†       4 ´ºÒâ,°µÏã                  ¨†\n\n");
+	printf("\t\t\t\t¨†       5 ÄãµÄÊÀ½çÎÒ×îÃÀ             ¨†\n\n");
+	printf("\t\t\t\t¨†       6 Ñô´ºÈıÔÂ                   ¨†\n\n");
+	printf("\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰  \n\n");
+	printf("\t\t\t\tÇëÑ¡ÔñÎÄÕÂ£º");
 	scanf("%d",&i);
 	ch_1(i,1);
 }
-//è‹±æ–‡ç›®å½•
+//Ó¢ÎÄÄ¿Â¼
 void eng_menu()
 {
 	int i;
-	printf("\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–\n\n");
-	printf("\t\t\t\tâ–       1 é’é“œ           â–\n\n");
-	printf("\t\t\t\tâ–       2 ç™½é“¶           â–\n\n");
-	printf("\t\t\t\tâ–       3 é»„é‡‘           â–\n\n");
-	printf("\t\t\t\tâ–       4 é“‚é‡‘           â–\n\n");
-	printf("\t\t\t\tâ–       5 é’»çŸ³           â–\n\n");
-	printf("\t\t\t\tâ–       6 é»„é‡‘           â–\n\n");
-	printf("\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”\n\n");
-	printf("\t\t\t\tè¯·é€‰æ‹©æ–‡ç« ï¼š");
+	printf("\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x\n\n");
+	printf("\t\t\t\t¨†       1  Success                     ¨†\n\n");
+	printf("\t\t\t\t¨†       2  Love                        ¨†\n\n");
+	printf("\t\t\t\t¨†       3  A Beautiful Flower          ¨†\n\n");
+	printf("\t\t\t\t¨†       4  Spirit                      ¨†\n\n");
+	printf("\t\t\t\t¨†       5  A Wild Guess                ¨†\n\n");
+	printf("\t\t\t\t¨†       6  TO Borrow an Ox             ¨†\n\n");
+	printf("\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰\n\n");
+	printf("\t\t\t\tÇëÑ¡ÔñÎÄÕÂ£º");
 	scanf("%d",&i);
 	ch_2(i,1);
 }
 
 
 
-//æŒ‘æˆ˜è¯„è¯­
+//ÌôÕ½ÆÀÓï
 void jump()
 {
 	if(minl<time_1&&c1==100)
-				  printf("\t\t\t\t\tâ—â—†æŒ‘æˆ˜æˆåŠŸâ—â—†\n");
+				  printf("\t\t\t\t\t¡ñ¡ôÌôÕ½³É¹¦¡ñ¡ô\n");
     else 
-                  printf("\t\t\t\t\tâ—â—†å¾ˆé—æ†¾ï¼ŒæŒ‘æˆ˜å¤±è´¥ï¼â—â—†\n");
+                  printf("\t\t\t\t\t¡ñ¡ôºÜÒÅº¶£¬ÌôÕ½Ê§°Ü£¡¡ñ¡ô\n");
 }
 
 
-//æŒ‘æˆ˜æ¨¡å—
+//ÌôÕ½Ä£¿é
 void challeng()
 {
 	int choice1;
     printf("\t\t\t\t_____________________________________________________________________\n");
-	printf("\t\t\t\t|   æ¸©é¦¨æç¤ºï¼šè¯·é€‰æ‹©ä¸åŒçš„ç­‰çº§ï¼Œåœ¨è§„å®šçš„æ—¶é—´ä¸­å…¨éƒ¨æ‰“å°å®Œï¼Œä¸­æ–‡è¾“å…¥è¯· |\n");
-	printf("\t\t\t\t|             è‡ªè¡Œæ”¹å˜è¾“å…¥æ³•,è¶Šå¾€ä¸‹éš¾åº¦è¶Šé«˜                          |\n");
+	printf("\t\t\t\t|   ÎÂÜ°ÌáÊ¾£ºÇëÑ¡Ôñ²»Í¬µÄµÈ¼¶£¬ÔÚ¹æ¶¨µÄÊ±¼äÖĞÈ«²¿´òÓ¡Íê£¬ÖĞÎÄÊäÈëÇë |\n");
+	printf("\t\t\t\t|             ×ÔĞĞ¸Ä±äÊäÈë·¨,Ô½ÍùÏÂÄÑ¶ÈÔ½¸ß                          |\n");
 	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
-	printf("\t\t\t\tâ—â—†æ¬¢è¿è¿›å…¥æŒ‘æˆ˜æ¨¡å—ï¼Œç¥ä½ å¥½è¿!â—â—†\n\n");
-
-	printf("\t\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â– \n\n");
-	printf("\t\t\t\t\tâ–   1   æ‹¼éŸ³æ‰“å­—              â–\n\n");
-	printf("\t\t\t\t\tâ–   2   è‹±è¯­æ‰“å­—              â–\n\n");
-	printf("\t\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–” \n\n");
-	printf("\t\t\t\tè¯·é€‰æ‹©ï¼š\n");
-	scanf("%d",&choice1);	
-	printf("\n\n\t\t\t\tè¯·è¾“å…¥ä½ è¦æŒ‘æˆ˜çš„åˆ†é’Ÿæ•°ï¼š");
+	printf("\t\t\t\t¡ñ¡ô»¶Ó­½øÈëÌôÕ½Ä£¿é£¬×£ÄãºÃÔË!¡ñ¡ô\n\n");
+	printf("\t\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x \n\n");
+	printf("\t\t\t\t\t¨†   1   Æ´Òô´ò×Ö              ¨†\n\n");
+	printf("\t\t\t\t\t¨†   2   Ó¢Óï´ò×Ö              ¨†\n\n");
+	printf("\t\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰ \n\n");
+	printf("\t\t\t\tÇëÑ¡Ôñ£º\n");
+	fflush(stdin);
+	scanf("%d",&choice1);
+	system("cls");
+	printf("\n\n\t\t\t\tÇëÊäÈëÄãÒªÌôÕ½µÄ·ÖÖÓÊı(ÕûÊı)£º");
 	scanf("%d",&time_1);
+	system("cls");
 	switch(choice1)
 	{
     	case 1:chin_menu();break;
 		case 2: eng_menu();break;
 		default:menu();break;
 	}
-	
-	
+
     jump();
 
 }
 
 
-//é€‰æ‹©æ¨¡å—
+//Ñ¡ÔñÄ£¿é
 void getchoice()
 {
-	printf("\t\t\t\t\tâ—â—†â—â—†â—â—†â—â—†â—â—†â—â—†â—â—†\n\n");
-	printf("\t\t\t\t\tâ—   1 éšæœºæ¨¡å¼           â—\n\n");
-    printf("\t\t\t\t\tâ—   2 é€‰æ‹©æ¨¡å¼           â—\n\n");
-	printf("\t\t\t\t\tâ—   3 æŒ‘æˆ˜æ¨¡å¼           â—\n\n");
-	printf("\t\t\t\t\tâ—   0 é€€å‡º               â—\n\n");
-	printf("\t\t\t\t\tâ—â—†â—â—†â—â—†â—â—†â—â—†â—â—†â—â—†\n\n\n");
-	printf("\t\t\t\t\tè¯·é€‰æ‹©ï¼š\n");
+	printf("\t\t\t\t\t¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô\n\n");
+	printf("\t\t\t\t\t¡ñ   1 Ëæ»úÄ£Ê½           ¡ñ\n\n");
+    printf("\t\t\t\t\t¡ñ   2 Ñ¡ÔñÄ£Ê½           ¡ñ\n\n");
+	printf("\t\t\t\t\t¡ñ   3 ÌôÕ½Ä£Ê½           ¡ñ\n\n");
+	printf("\t\t\t\t\t¡ñ   0 ÍË³ö               ¡ñ\n\n");
+	printf("\t\t\t\t\t¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô¡ñ¡ô\n\n\n");
+	printf("\t\t\t\t\tÇëÑ¡Ôñ£º\n");
+	fflush(stdin);
 }
 
-//é€‰æ‹©æ–‡ç« 
-void choose(int choice1)
+//Ñ¡ÔñÎÄÕÂ
+void choose(int  choice1)
 {
 	switch(choice1)
-		{
+	{
 		           case 1:chin_menu();break;
 		           case 2:eng_menu();break;
-	 }
+				   default:menu();break;
+	}
 }
 
-//ä¸»èœå•
+//Ö÷²Ëµ¥
 void menu()
 {
-	int choice,choice1,N;
+	int N;
+	int  choice,choice1;
 	srand(time(NULL));
-	printf("\n\n\n\n\t\t\tâ–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡\n");
-	printf("\t\t\tâ–¡                           æ¬¢è¿è¿›å…¥æ‰“å­—ç¨‹åº                             â–¡\n");
-	printf("\t\t\tâ–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡\n\n\n");
-	printf("\t\t\t\tâ—â—†å­¦ä¹ ä½¿ä½ å¿«ä¹ï¼Œè®©æˆ‘ä»¬ä¸€èµ·å¿«ä¹å­¦ä¹ å§ï¼â—â—†                \n\n\n");
-	getchoice();//é€‰æ‹©æ¨¡å—
+	while(1)
+	{
+	printf("\n\n\n\n\t\t\t¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ\n");
+	printf("\t\t\t¡õ                           »¶Ó­½øÈë´ò×Ö³ÌĞò                               ¡õ\n");
+	printf("\t\t\t¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ¡õ\n\n\n");
+	printf("\t\t\t\t¡ñ¡ôÑ§Ï°Ê¹Äã¿ìÀÖ£¬ÈÃÎÒÃÇÒ»Æğ¿ìÀÖÑ§Ï°°É£¡¡ñ¡ô                \n\n\n");
+	getchoice();//Ñ¡ÔñÄ£¿é
 	scanf("%d",&choice1);
 	system("cls");
-	printf("\t\t\t\t\tâ–â–â–â–â–â–â–â–â–â–â–â–â–â–â–â–\n\n");
-	printf("\t\t\t\t\tâ–   1   æ‹¼éŸ³æ‰“å­—              â–\n\n");
-	printf("\t\t\t\t\tâ–   2   è‹±è¯­æ‰“å­—              â–\n\n");
-	printf("\t\t\t\t\tâ–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”â–”\n\n");
-	printf("\t\t\t\tè¯·é€‰æ‹©ï¼š\n");
+	printf("\t\t\t\t\t¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x¨x\n\n");
+	printf("\t\t\t\t\t¨†   1   Æ´Òô´ò×Ö              ¨†\n\n");
+	printf("\t\t\t\t\t¨†   2   Ó¢Óï´ò×Ö              ¨†\n\n");
+	printf("\t\t\t\t\t¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰¨‰\n\n");
+	printf("\t\t\t\tÇëÑ¡Ôñ£º\n");
+	fflush(stdin);
 	scanf("%d",&choice);
 	system("cls");
 	switch(choice1)
 	{
-    	case 1:N=rand()%6;
-			switch(choice)
-			{
-            	case 1:ch_1(N,1);break;
-	        	case 2:ch_2(N,1);break;
-			}
-			break;
-		case 2:choose(choice);
+	      case 1:{
+		           N=rand()%6;
+			     switch(choice)
+				 {
+            	      case 1:ch_1(N,1);break;
+	        	      case 2:ch_2(N,1);break;
+				 };
+			        
+				   }break;
+		case 2:choose(choice);break;
 		case 3:challeng();break;
-		default:menu();break;
+		default:main();break;
 	}
+	system("cls");
+	}
+		
+	
+	
 }
 
 void tshi()
 {
-	printf("\t\t\t\t_____________________________________________________________________\n");
-	printf("\t\t\t\t|   æ¸©é¦¨æç¤ºï¼šåœ¨æ“ä½œä¸­æŒ‰0å›åˆ°ä¸»èœå•ï¼Œè¾“å…¥æ­£ç¡®çš„æ•°å­—è¿›å…¥ç›¸åº”çš„ç¨‹åº    |\n");
-	printf("\t\t\t\t|              è¾“å…¥å•è¯åæŒ‰enteré”®ç»§ç»­                               |\n");
-	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
+	printf("\n\n\n\n\t\t\t\t_____________________________________________________________________\n");
+	printf("\t\t\t\t|   ÎÂÜ°ÌáÊ¾£ºÔÚ²Ù×÷ÖĞ°´0»Øµ½Ö÷²Ëµ¥£¬ÊäÈëÕıÈ·µÄÊı×Ö½øÈëÏàÓ¦µÄ³ÌĞò    |\n");
+	printf("\t\t\t\t|              ÊäÈëµ¥´Êºó°´enter¼ü¼ÌĞø                               |\n");
+	printf("\t\t\t\t|____________________________________________________________________|\n");
+	printf("\n\n\n\n\t\t\t\t\t\t----------Ö¸µ¼ÀÏÊ¦£º²ÜÇí");
 }
 
-//çº¿ç¨‹é—®é¢˜
+//Ïß³ÌÎÊÌâ
 /*int in_gore(void *pdata)
 {
 	mydata * pd=(mydata*)pdata;
     while (1)
 	{
-        Sleep(1000);//æš‚åœ1s
-        system("cls");//æ¸…å±
+        Sleep(1000);//ÔİÍ£1s
+        system("cls");//ÇåÆÁ
         pd->sec=pd->sec+1;
         if (pd->sec == 60)
 		{
@@ -375,15 +431,30 @@ void tshi()
             pd->hour = 0;
         }
         printf("\t\t\t\t\t\t%02d:%02d:%02d\n", pd->hour, pd->min, pd->sec);
-        //%02dè¾“å‡ºé•¿åº¦ä¸º2ï¼Œä¸è¶³2å‰é¢è¡¥0
+        //%02dÊä³ö³¤¶ÈÎª2£¬²»×ã2Ç°Ãæ²¹0
     }
     return 0;
 }*/
 
 void main()
 {
-	system("color 0C");
-	tshi();
+	int i;
+    tshi();
+	for(i=0;i<5;i++)
+	{
+		
+			
+			system("color 04");	
+			Sleep(20);
+			system("color 05");
+		    Sleep(20);
+		    system("color 06");
+			Sleep(20);
+	
+	}
+	
+	Sleep(1000);
+	system("cls");
 	menu();
 }
 

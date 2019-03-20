@@ -4,6 +4,9 @@
 #include <time.h>
 #include <malloc.h>
 #include <windows.h>
+#include <conio.h>
+#include <mmsystem.h>
+#pragma comment(lib, "Winmm.lib") 
 
 int num=20,k=0;
 time_t start,end;
@@ -20,12 +23,17 @@ void leave();
 void read(char *str,int N,int flag);//从文件中读出单词模块并创建链表
 void recite(struct studentread *head,int N,int flag);//背单词模块
 void display();//打印分数模块
-void ch(int no,int N,int flag);//根据不同年级，选择不同文件
-void ch1(int no);//根据不同年级，选择不同文件浏览
+void ch(char no,int N,int flag);//根据不同年级，选择不同文件
+void ch1(char no);//根据不同年级，选择不同文件浏览
 void jump();
-void challeng(int choice,int N);//挑战模块
+void challeng(int N);//挑战模块
 void wrongtxt(struct studentread *head);//错题保存到文件
 struct studentread * wrongread();//读出错题
+void pf1();//播放声音文件
+void pf2();
+void tshi_1();//提示挑战信息
+void main();
+void wrongmenu();//错题目录
 
 
 struct studentread
@@ -51,34 +59,124 @@ static void setPos(int x,int y)
    SetConsoleCursorPosition(HOutput, point);//设置光标位置
 }
 
+//隐藏光标
+void HideCursor()
+{
+CONSOLE_CURSOR_INFO cursor_info = {1, 0}; 
+SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+}
+
+
+void color(short x) //自定义函根据参数改变颜色   
+{  
+    if(x>=0 && x<=15)//参数在0-15的范围颜色  
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);    //只有一个参数，改变字体颜色   
+    else//默认的颜色白色  
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);  
+}  
+
+void zhuanshi()
+{
+	printf("\n\n\n\n\t\t\t\t●三秒后开始\n\n");
+	Sleep(1500);
+	system("cls");
+	start=time(NULL);
+	system("color 4");
+	for(sec=1;sec<=3;sec++)
+	{
+		if(sec==1)
+			color(4);
+		else if(sec==2)
+			color(5);
+		else
+			color(6);
+		 printf("\n\n\n\n\n\t\t\t\t\t\t[%d]",sec);
+		Sleep(1000);
+		system("cls");
+	}
+	printf("\n\n\n\n\n\t\t\t\t\t\tReady\n");
+	Sleep(600);
+	system("cls");
+	printf("\n\n\n\n\n\t\t\t\t\t\tGO\n");
+	Sleep(600);
+	system("cls");
+	system("color B4");
+	sec=0;
+}
+
+//计算时间
+void time1()
+{
+	 while(sec>60)
+	   {
+		   minl++;
+		   sec=sec-60;
+	   }
+	   if(minl==60)
+	   {
+		   hour++;
+		   minl=0;
+	   }
+	   if(hour==24)
+		   hour=0;
+}
 
 //选择题数
 void choose()
 {
-	
-	printf("\t\t\t\t\t\n\n\n请输入你要背的单词数(1-20)：\n");
-	setPos(20,10);
+	system("color B1");
+	printf("\n\n\n\t\t\t\t\t请输入你要背的单词数(1-20)：\n");
+	setPos(39,5);
 	scanf("%d",&num);
 	
 }
+
 
 //浏览单词
 void look(char *st)
 {
 	FILE *fp;
 	char word[1024];
+	int i=0;
+	system("color 9");
 	memset(word,0,sizeof(char)*1024);
 	if((fp=fopen(st,"r+"))==NULL)
 	{
 		printf("can't open this file\n");
 		exit(0);
 	}
+      color(4);  
+	 printf("\n\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃                    词汇王    \n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 printf("\n\n\n");
+	 setPos(0,0);
 	while(!feof(fp))
 	{
 		if(fscanf(fp,"%s",word)!=EOF)
-		        printf("\t\t\t\t●%s\n",word);
+		{
+			if(i%2==0)
+				 color(6); 
+			else
+				color(4);
+		   printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	       printf("\t\t┃             %s    \n",word);
+	       printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+		   i++;
+		}
+		
+		   if(i%8==0)
+		   {       system("pause");
+			      system("cls");
+			   	  printf("\n\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	               printf("\t\t┃                    词汇王    \n");
+	               printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	               printf("\n\n\n");
+			      
+		   }
 	}
 	fclose(fp);
+	system("pause");
 }
 
 
@@ -92,9 +190,9 @@ void read(char *str,int N,int flag)
 {
 	FILE *fp;
 	int i=1;
-//	thrd_t p_id;
-//	struct mydata data={.hour=0,.min=0,.sec=0};
-	struct studentread *p1,*head=(struct studentread *)malloc(sizeof(struct studentread));
+	struct studentread *p1,*head=NULL;
+	head=(struct studentread *)malloc(sizeof(struct studentread));
+	memset(head,0,sizeof(struct studentread));
 	if((fp=fopen(str,"r+"))==NULL)
 	{
 		printf("can't open this file\n");
@@ -117,66 +215,62 @@ void read(char *str,int N,int flag)
 
 recite(head,N,flag);
 }
-
+//释放内存
+void freelist(struct studentread *head)
+{
+	struct studentread *p=head->next,*p1;
+	while(p!=NULL)
+	{
+		p1=p->next;
+		free(p1);
+		p=p1;
+	}
+}
 
 
 //背单词模块
 void recite(struct studentread *head,int N,int flag)
 {
-	int i=0,min,n=0,max;
-	//mydata *pd=(mydata*)pdata;
-	int r=0,c1=0;
-	//double cpu_time;
+	int i=0,min,n=0,c1=0;
+	char r;
 	char string[200];
 	struct studentread *p=head->next,*h_d=NULL;
 	memset(string,0,sizeof(char)*200);
     hour=minl=sec=0;
-	//thrd_join(pd->id,&result);
 	if(flag)
-	   choose();
+	   choose();//选择单词数
+	zhuanshi();//开始前的提示
 	srand(time(NULL));
-	i=rand()%(N/2-k)+1;
+	i=rand()%(N/2-k)+1;//产生随机数，随机生成单词
 	k++;
 	if(N==k)
 		k=0;//以防k>N
 	score=num;
-	for(min=0;min<N-i;min++)
+	for(min=0;min<i;min++)
 	{
 		if(p!=NULL)
-		  p=p->next;
+		  p=p->next;//找到位置为i的节点
 		
 	}
 	h_d=p;
-	max=strlen(p->word);
-	printf("\n\n\t\t\t\t●三秒后开始\n\n");
-	start=time(NULL);
-    Sleep(3000);
-   printf("\t\t\t\t●现在开始\n\n");
-	system("cls");//清屏
-	sec=3;
-//	thrd_join(id,NULL);
-	for(min=N-i;min<N-i+num;min++)
+	for(min=0;min<num;min++)
 	{
-       while(sec>60)
-	   {
-		   minl++;
-		   sec=sec-60;
-	   }
-	   if(minl>60)
-	   {
-		   hour++;
-		   minl=0;
-	   }
-	   if(hour>24)
-		   hour=0;
-	   printf("\t\t\t\t★|%02d:%02d:%02d|",hour,minl,sec);
+		time1();
+	   printf("\n\n\t\t\t\t★|%02d:%02d:%02d|",hour,minl,sec);
 	   printf("\t★已背单词数量：%d\t正确个数：%d",n,c1);
+	   	// 打开音乐
+    mciSendString("open 3530.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
+
 	   if(!flag)
 	   {
 		   if(minl==time_1)
 		   {
-			    printf("\n\n\t\t\t\t挑战失败！\n\n");
-			    printf("\n\n\t\t\t\t<1> 继续\t<2> 退出\n");
+			   color(4);
+			    printf("\n\n\n\t\t\t\t:-O挑战失败！\n");
+			    printf("\n\t\t\t\t<1> 继续\t<2> 退出\n");
 			    printf("\n\t\t\t\t\t请选择：");
 		         scanf("%d",&r);
 				 	if(r==2)
@@ -186,25 +280,39 @@ void recite(struct studentread *head,int N,int flag)
 					}
 		   }
 	   }
-
-		printf("\n\n\n\t\t\t\t●中文：%s\n",p->ch);
+         color(5);
+		printf("\n\n\n\t\t\t\t●中文：%s\n\n",p->ch);
+		color(10);
 		printf("\t\t\t\t●请输入英文:");
 		scanf("%s",string);
+		printf("\n\n");
+		// 停止播放并关闭音乐
+         mciSendString("stop mymusic", NULL, 0, NULL);
+         mciSendString("close mymusic", NULL, 0, NULL);
 		if(strcmp(string,"0")==0)
 		{
-			printf("\n\n\n\t\t\t\t学习需要坚持！\n\n");
+			system("cls");
+			printf("\n\n\n\t\t\t\t＝　＝＃学习需要坚持！\n\n");
+			Sleep(1000);
+			system("cls");
 			menu();
-			//break;
+			break;
 		}
 		if(strcmp(string,p->word)==0)
 		{
-			printf("\t\t\t\t●回答正确！\n");
+			pf2();
+			color(3);
+			printf("\t\t\t\t●回答正确≧◇≦\n");
+			Sleep(100);
 			c1++;
 		}
 		else
 		{
 			wrongtxt(p);
-			printf("\t\t\t\t●回答错误!\n");
+			pf1();
+			color(4);
+			printf("\t\t\t\t●回答错误T_T\n");
+			Sleep(100);
 			score-=1;
 		}
 	//	sec++;
@@ -216,27 +324,36 @@ void recite(struct studentread *head,int N,int flag)
 		system("cls");
 	}
 	display();
+	system("pause");
+	system("cls");
+	system("color 04");
 	if(flag)//普通练习模块的操作
 	{
-		printf("\t\t\t\t\t●◆让我们再重新复习一遍吧：\n");
+		printf("\n\n\t\t\t\t\t●◆让我们再重新复习一遍吧：\n");
     	for(i=0;i<num;i++)
 		{
-		printf("\t\t\t\t\t________________________________\n");
+			color(3);
+		printf("\n\t\t\t\t\t________________________________\n");
 		printf("\t\t\t\t\t       %s               \t\t\t\n",h_d->word);
 		printf("\t\t\t\t\t________________________________\t\t\t\n");
 		printf("\t\t\t\t\t<1> 认识\t<2> 不认识");
 		printf("\n\t\t\t\t\t请选择：");
-		scanf("%d",&r);
-		if(r==1)
+		r=getch();
+		if(r==49)
 		     h_d=h_d->next;
 		else
 		{
-			printf("\t\t\t\t\t●中文：%s",h_d->ch);
+			color(4);
+			printf("\n\t\t\t\t\t●中文：%s",h_d->ch);
+			//system("pause");
 		    h_d=h_d->next;
 		}
 		
 		}
 	}
+	system("pause");
+	system("cls");
+		//freelist(head);//释放内存
 	printf("\n\n\n");
 	num=0;//以便下次从0开始
 	
@@ -247,19 +364,21 @@ void recite(struct studentread *head,int N,int flag)
 //打印分数模块
 void display()
 {
-	printf("\t\t\t\t\t●◆总分:%.0f\n",score);
+	system("color E4");
+	printf("\n\n\t\t\t\t\t●◆总分:%d\n",score);
 	if(score!=0)
 	    printf("\t\t\t\t\t●◆正确率:%.3f\n",(score/num*1.0)*100);
 	else
 	    printf("\t\t\t\t\t●◆正确率:0.00\n");
+	time1();
 	printf("\t\t\t\t\t●◆用时：\n");
 	printf("\t\t\t\t\t\t__________________\n");
     printf("\t\t\t\t\t\t%02d:%02d:%02d   \n",hour, minl, sec);//%02d输出长度为2，不足2前面补0
     printf("\t\t\t\t\t\t_________________\n\n");
     if(num==score)
-		printf("\t\t\t\t\t●◆baby，真棒!●◆\n");
+		printf("\t\t\t\t\t<※baby，真棒!\n");
 	else
-		printf("\t\t\t\t\t●◆baby,还要继续努力哦!●◆\n");
+		printf("\t\t\t\t\tT_Tbaby,还要继续努力哦!\n");
 }
 
  
@@ -276,13 +395,15 @@ void wrongtxt(struct studentread *h)
 	fwrite(h,sizeof(struct studentread),1,fp);
 	fclose(fp);
 }
+
+
 //保存全部错题
 void wrong_baocun(struct studentread *head)
 {
       FILE *fp;
-		struct studentread *p;
+	   struct studentread *p;
 	   p=head->next;
-	if((fp=fopen("wrong.txt","w"))==NULL)
+	if((fp=fopen("wrong.txt","w+"))==NULL)
 	{
 		printf("can't open this file!");
 		exit(0);
@@ -293,6 +414,9 @@ void wrong_baocun(struct studentread *head)
 			p=p->next;
 	}
 	fclose(fp);
+	freelist(head);//释放内存
+	menu();
+
 }
 
 //读出错题
@@ -321,22 +445,71 @@ struct studentread * wrongread()
 	return head;
 }
 
+//清除所有错题
+void qchu()
+{
+	FILE *fp;
+	if((fp=fopen("wrong.txt","w+"))==NULL)
+	{
+		printf("can't open this file\n");
+		exit(0);
+	}
+	fclose(fp);
+	 printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃             清除成功！\n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 Sleep(1000);
+}
+
 //浏览错题
 void liulan()
 {
 	struct studentread *p,*head=NULL;
+	int i=0;
+	char k;
 	head=wrongread();
+	system("color 2");
 	p=head->next;
+	
+	 printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃            错题本\n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 printf("\n\n");
+	 if(p==NULL)
+     {
+	 printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃             无\n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 }
 	while(p!=NULL)
 	{
-		printf("\t\t\t\t\t●●●●●●●●●●●●●●●●●●●●\n");
-		printf("\t\t\t\t\t●◆英文：%s                        ●◆\n",p->word);
-		printf("\t\t\t\t\t●◆中文：%s                        ●◆\n",p->ch);
-		printf("\t\t\t\t\t●●●●●●●●●●●●●●●●●●●●\n\n\n");
+		if(i%2==0)
+			 color(6); 
+		else
+			color(4);//变化字体颜色
+     printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃             英文：%s    \n",p->word);
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃             中文：%s    \n",p->ch);
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 i++;
+	 scanf("%c",&k);
+	 if(i%8==0)
+	 {
+	   system("pause"); 
+		 system("cls");
+     printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃            错题本\n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+	 printf("\n\n");
+		
+	 }
 		p=p->next;
 	}
+	system("pause");
+	freelist(head);//释放内存
 }
-
 //练习错题
 void lianxi()
 {
@@ -344,71 +517,106 @@ void lianxi()
 		char word[20];
 		int i=0,l=0;
 		head=wrongread();
-		p=head->next->next;
-		while(p!=NULL)
+		p=head;
+		sec=0;
+		start=time(NULL);
+		while(p->next!=NULL)
 		{
-			printf("\t\t\t\t|中文：%s\n\n",p->ch);
-			printf("\t\t\t\t|英文：");
-			gets(word);
+			 while(sec>60)
+			 {
+		       minl++;
+		        sec=sec-60;
+			 }
+	       if(minl==60)
+		   {
+		       hour++;
+		      minl=0;
+		   }
+	   if(hour==24)
+		   hour=0;
+	   printf("\t\t\t\t★|%02d:%02d:%02d|",hour,minl,sec);
+	   printf("\t★错误个数：%d\t正确个数：%d\n\n\n",l,i);
+	   color(5);
+	   printf("\t\t\t\t  |中文：%s\n\n",p->next->ch);
+	   color(10);
+	   printf("\t\t\t\t  |英文：");
+		gets(word);
 			if(strcmp(word,"0")==0)
 			{
 			printf("\n\n\n\t\t\t\t学习需要坚持！\n\n");
 			menu();
 			break;
 			}
-			if(strcmp(word,p->word)==0)
+			if(strcmp(word,p->next->word)==0)
 			{
-				printf("\n\n\t\t\t\t●回答正确！\n");
+				color(3);
+				printf("\n\n\t\t\t\t●回答正确≧◇≦\n");
+				Sleep(1000);
+				p1=p->next;
+				p->next=p->next->next;
+				free(p1);
 				i++;
+				p=p->next;
 			}
 			else
 			{
-				printf("\n\n\t\t\t\t●回答错误！\n");
-				p1=p->next;
-				free(p);
-				p=p1;
+				color(4);
+				printf("\n\n\t\t\t\t●回答错误T_T\n");
+				Sleep(1000);
+				
 				l++;
 			}
-			p=p->next;
+			end=time(NULL);
+	    	sec=(int)difftime(end,start);
+			system("cls");
+			
 		}
 		
 		printf("\n\n\t\t\t\t●●_____________________________●●\n");
 		printf("\n\n\t\t\t\t●●消灭单词：%d |待消灭单词：%d ●●\n",i,l);
 		printf("\n\n\t\t\t\t●●_____________________________●●\n\n");
+		Sleep(2000);
 		wrong_baocun(head);
 }
 
 
    
 //根据不同年级，选择不同文件
-void ch(int no,int N,int flag)
+void ch(char no,int N,int flag)
 {
 	char *str;
+	
 	switch(no)
 	{
-    	case 1:str="word1.txt";num=20;read(str,N,flag);break;
-		case 2:str="word2.txt";num=30;read(str,N,flag);break;
-		case 3:str="word3.txt";num=40;read(str,N,flag);break;
-		case 4:str="word4.txt";num=60;read(str,N,flag);break;
-		case 5:str="word5.txt";num=80;read(str,N,flag);break;
-		case 6:str="word6.txt";num=100;read(str,N,flag);break;
+    	case 49:str="word1.txt";num=15;break;
+		case 50:str="word2.txt";num=25;break;
+		case 51:str="word3.txt";num=35;break;
+		case 52:str="word4.txt";num=45;break;
+		case 53:str="word5.txt";num=65;break;
+		case 54:str="word6.txt";num=80;break;
 	}
-	
+   
+	if(!flag)
+	{
+		tshi_1();
+		Sleep(3500);//挑战模块的提示
+	}
+	read(str,N,flag);
 
 }
 
 //根据不同年级，选择不同文件浏览
-void ch1(int no)
+void ch1(char no)
 {
 	char *str;
 	switch(no)
 	{
-    	case 1:str="word1.txt";look(str);break;
-		case 2:str="word2.txt";look(str);break;
-		case 3:str="word3.txt";look(str);break;
-		case 4:str="word4.txt";look(str);break;
-		case 5:str="word5.txt";look(str);break;
-		case 6:str="word6.txt";look(str);break;
+    	case 49:str="word1.txt";look(str);break;
+		case 50:str="word2.txt";look(str);break;
+		case 51:str="word3.txt";look(str);break;
+		case 52:str="word4.txt";look(str);break;
+		case 53:str="word5.txt";look(str);break;
+		case 54:str="word6.txt";look(str);break;
 	}
 }
 
@@ -419,138 +627,239 @@ void jump()
 				  printf("\t\t\t\t\t●◆挑战成功●◆\n");
     else 
                   printf("\t\t\t\t\t●◆很遗憾，挑战失败！●◆\n");
+
 }
 
 
 //挑战模块
-void challeng(int choice1,int N)
+void challeng(int N)
 {
-	int i;
-    printf("\t\t\t\t_____________________________________________________________________\n");
-	printf("\t\t\t\t|   温馨提示：请选择不同的等级，在规定的时间中将题全部答对           |\n");
-	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
+	char i;
+	system("color D");
+    printf("\t\t\t\t==========================================================================\n");
+	printf("\t\t\t\t|   温馨提示：请选择不同的等级，越往下难度越大，在规定的时间中将题全部答对|\n");
+	printf("\t\t\t\t|=========================================================================|\n\n\n");
 	printf("\t\t\t\t▁▁▁▁▁▁▁▁▁▁▁▁▁\n\n");
+	color(3);
 	printf("\t\t\t\t▎       1 青铜           ▎\n\n");
+	color(4);
 	printf("\t\t\t\t▎       2 白银           ▎\n\n");
+	color(5);
 	printf("\t\t\t\t▎       3 黄金           ▎\n\n");
+	color(6);
 	printf("\t\t\t\t▎       4 铂金           ▎\n\n");
+	color(7);
 	printf("\t\t\t\t▎       5 钻石           ▎\n\n");
+	color(8);
 	printf("\t\t\t\t▎       6 黄金           ▎\n\n");
 	printf("\t\t\t\t▔▔▔▔▔▔▔▔▔▔▔▔▔\n\n");
+	color(9);
 	printf("\t\t\t\t●◆欢迎进入挑战模块，祝你好运!●◆\n\n");
 	printf("\t\t\t\t请选择：");
-	scanf("%d",&i);
+    i=getch();
 	switch(i)
 	{
-	  case 1:time_1=7;break;
-      case 2:time_1=6;break;
-	  case 3:time_1=5;break;
-	  case 4:time_1=4;break;
-	  case 5:time_1=3;break;
-	  case 6:time_1=2;break;
-	  default:printf("\t\t\t\t请输入正确的序号！\n\n");
+	  case 49:time_1=7;break;
+      case 50:time_1=6;break;
+	  case 51:time_1=5;break;
+	  case 52:time_1=4;break;
+	  case 53:time_1=3;break;
+	  case 54:time_1=2;break;
+	  default:menu();break;
 	}
-	printf("\t\t\t\t挑战马上开始啦\n\n");
-	ch(choice1,i,0);
+	system("cls");
+	Sleep(1000);
+	system("cls");
+	printf("\n\n\n\n\t\t\t\t挑战马上开始啦\n\n");
+	ch(i,N,0);
     jump();
+	 system("pause");
 
 }
 
 //错题目录
 void wrongmenu()
 {
-	int i;
-	printf("\t\t\t\t\t                          --------------------\n");
-	printf("\t\t\t\t\t                              1 浏览错题\n");
+	char i;
+	int k;
+	system("color B6") ;
+	printf("\n\n\t\t\t\t   o__o \n\n");
+    printf("\t\t\t\t   | @,@   1 浏览错题\n\n");
+    printf("\t\t\t\t●(  )●   2 清除所有错题\n\n");    
+    printf("\t\t\t\t    \\\\●● 3 练习错题\n\n");
+    printf("\n");
 	printf("\n");
-	printf("\n");
-	printf("\t\t\t\t\t                              2 练习错题\n");
-	printf("\t\t\t\t\t                          --------------------\n\n\n");
+	for(k=0;k<5;k++)
+	{
+		
+			
+			system("color 04");	
+			Sleep(20);
+			system("color 05");
+		    Sleep(20);
+		    system("color 06");
+			Sleep(20);
+	
+
+	}//变换颜色
+	system("color B6") ;
 	printf("\t\t\t\t请选择：");
-	scanf("%d",&i);
+	i=getch();
 	system("cls");
     switch(i)
 	 {
-        	case 1:liulan();
+        	case 49:liulan();
 				   break;
 	            	
-	        case 2:lianxi();break;
+	        case 50:lianxi();break;
+			case 51:qchu();break;
 			default:menu();break;
 	}
+	//system("cls");
+	// system("pause");
 }
 
 
 //选择模块
 void getchoice()
 {
-	printf("\t\t\t\t\t●◆●◆●◆●◆●◆●◆\n");
-	printf("\t\t\t\t\t●1 背单词模式        ●\n\n");
-    printf("\t\t\t\t\t●2 错题模式          ●\n\n");
-	printf("\t\t\t\t\t●3 浏览单词          ●\n\n");
-	printf("\t\t\t\t\t●4 挑战模式          ●\n\n");
-	printf("\t\t\t\t\t●0 退出              ●\n\n");
-	printf("\t\t\t\t\t●◆●◆●◆●◆●◆●◆\n\n\n");
+     system("color 1") ;
+	 //system("cls");
+	printf("\n\n\t\t\t\t\t___●◆●◆●◆●◆●◆●◆\n\n");
+	color(4);
+	printf("\t\t\t\t\t ●●\\\\  1 背单词模式         \n\n");
+	color(3);
+    printf("\t\t\t\t\t @ @ c   2 错题模式           \n\n");
+	color(5);
+	printf("\t\t\t\t\t\\\\~ /    3 浏览单词         \n\n");
+	color(6);
+	printf("\t\t\t\t\t         4 挑战模式            \n\n");
+	color(7);
+	printf("\t\t\t\t\t         0 退出              \n\n");
+	color(8);
+	printf("\t\t\t\t\t    ●◆●◆●◆●◆●◆●◆\n\n");
 	printf("\t\t\t\t\t请选择：\n");
+	setPos(46,17);
 }
 
 //退出模块
 void leave()
 {
-	printf("\t\t\t\t\t☆☆☆☆小主人，今天真棒，欢迎下次来学习！☆☆☆☆\n\n\n\n");
+	printf("\n\n\n\n\t\t\t\t\t☆☆☆☆小主人，今天真棒，欢迎下次来学习！☆☆☆☆\n\n\n\n");
 }
 //主菜单
 void menu()
 {
-	int choice,choice1,N;
-	printf("\n\n\n\n\t\t\t□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□\n");
-	printf("\t\t\t□                           欢迎进入背单词程序                             □\n");
-	printf("\t\t\t□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□\n\n\n");
-	printf("\t\t\t\t●◆学习使你快乐，让我们一起快乐学习吧！●◆                \n");
-	printf("\t\t\t\t\t▁▁▁▁▁▁▁▁▁▁▁▁▁\n\n");
-	printf("\t\t\t\t\t▎   1   小学              ▎\n\n");
-	printf("\t\t\t\t\t▎   2   初中              ▎\n\n");
-	printf("\t\t\t\t\t▎   3   高中              ▎\n\n");
-	printf("\t\t\t\t\t▎   4   四级              ▎\n\n");
-	printf("\t\t\t\t\t▎   5   六级              ▎\n\n");
-	printf("\t\t\t\t\t▎   6   八级              ▎\n\n");
-	printf("\t\t\t\t\t▔▔▔▔▔▔▔▔▔▔▔▔▔\n\n");
+	char choice,choice1;
+	int N;
+	system("color 4");
+	system("cls");
+	printf("\n\t\t\t\t□□□□□□□□□□□□□□□□□□□□□□□□□\n");
+	printf("\t\t\t\t□                欢迎进入背单词程序            □\n");
+	printf("\t\t\t\t□□□□□□□□□□□□□□□□□□□□□□□□□\n\n");
+	color(4);
+	printf("\t\t\t\t■〓□学习使你快乐，让我们一起快乐学习吧！(￣▽ ￣)                \n\n");
+	color(5);
+	printf("\t\t\t\t     /\\`\\  /\\`\\      ▎   1   小学              ▎   \n\n");
+	color(6);
+    printf("\t\t\t\t     \\/\\ V /\\/\\      ▎   2   初中              ▎   \n\n"); 
+    printf("\t\t\t\t        /6 6\\        ▎                         ▎\n\n");
+	color(9); 
+    printf("\t\t\t\t       (= Y =)       ▎   3   高中              ▎ \n\n");
+   	printf("\t\t\t\t      /`'^'` \\       ▎   4   四级 ≧◇≦       ▎   \n\n");
+	color(3);
+   	printf("\t\t\t\t     / /      \\ \\    ▎                         ▎ \n\n");
+	color(12);
+   	printf("\t\t\t\t    (_/        \\_)   ▎   5   六级              ▎\n\n");
+	color(14);
+  	printf("\t\t\t\t     /            \\o ▎   6   八级              ▎    \n\n");
+  	printf("\t\t\t\t  ___\\           /___  \n");
+    printf("\t\t\t\t(((____/^\\____)))  \n\n");
 	printf("\t\t\t\t请选择你的年级：\n");
-	setPos(34,33);
-	scanf("%d",&choice1);
+	HideCursor();
+	setPos(45,26);
+	choice1=getch();
 	switch(choice1)
 	{
-    	case 1:N=100;break;
-		case 2:N=1300;break;
-		case 3:N=3500;break;
-		case 4:N=350;break;
-		case 5:N=350;break;
-		case 6:N=350;break;
+    	case 49:N=100;break;
+		case 50:N=1300;break;
+		case 51:N=3500;break;
+		case 52:N=300;break;
+		case 53:N=300;break;
+		case 54:N=300;break;
 		default:menu();break;
 	}
-	system("cls");
+	
 	while(1)
 	{
-    getchoice();
-	scanf("%d",&choice);
-	system("cls");
-	switch(choice)
-	{
-	case 1: ch(choice1,N,1);break;
-	case 2: wrongmenu();break;
-	case 3: ch1(choice1);break;
-	case 4:challeng(choice1,N);break;
-	case 0: leave();break;
-    default:menu();break;
+		system("cls");
+       getchoice();
+	   choice=getch();
+	    system("cls");
+	    switch(choice)
+		{
+           	case 49: ch(choice1,N,1);break;
+	       case 50: wrongmenu();break;
+           	case 51: ch1(choice1);break;
+         	case 52:challeng(N);break;
+         	case 48: main();break;
+           default:main();break;
+		}
+		if(choice==48)
+			break;
 	}
+	 system("pause");
 }
+
+//播放音乐
+void pf1()
+{
+		// 打开音乐
+    mciSendString("open 失败.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
+
+       Sleep(2000);
+
+// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
 }
+
+//播放音乐
+void pf2()
+{
+		// 打开音乐
+    mciSendString("open 战斗胜利.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
+
+        Sleep(1700);
+
+// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
+}
+
+
 
 void tshi()
 {
-	printf("\t\t\t\t_____________________________________________________________________\n");
+	printf("\n\n\t\t\t\t_____________________________________________________________________\n");
 	printf("\t\t\t\t|   温馨提示：在操作中按0回到主菜单，输入正确的数字进入相应的程序    |\n");
 	printf("\t\t\t\t|              输入单词后按enter键继续                               |\n");
-	printf("\t\t\t\t|____________________________________________________________________|\n\n\n");
+	printf("\t\t\t\t|____________________________________________________________________|\n\n");
+	printf("\n\n\n\n\n\t\t\t\t\t\t-----指导老师：曹琼\n");
+}
+
+
+void tshi_1()
+{
+	printf("\n\n\n\n\t\t\t\t\t=========================\n");
+	printf("\t\t\t\t\t[请在%d分钟内完成%d个单词]\n\n",time_1,num);
+	printf("\t\t\t\t\t=========================\n\n");
 }
 
 //线程问题
@@ -583,9 +892,26 @@ void tshi()
 
 void main()
 {
-	system("color 0C");
+	int i;
 	tshi();
+	for(i=0;i<5;i++)
+	{
+		
+			
+			system("color 04");	
+			Sleep(20);
+			system("color 05");
+		    Sleep(20);
+		    system("color 06");
+			Sleep(20);
+	
+
+	}
+	Sleep(3000);
+	system("pause");
+	//pf();
 	menu();
+	 system("pause");
 }
 
 

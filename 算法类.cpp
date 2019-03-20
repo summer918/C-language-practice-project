@@ -8,7 +8,10 @@
 #include <time.h>
 #include <string.h>
 #include <windows.h>
+#include <mmsystem.h>
+#include <conio.h>
 #define _STDC_WANT_LIB_EXT1_1
+#pragma comment(lib, "Winmm.lib")
 
 
 int x=0;//统计已做的题数
@@ -63,8 +66,73 @@ HANDLE HOutput = GetStdHandle(STD_OUTPUT_HANDLE);//使用GetStdHandle(STD_OUTPUT_H
 SetConsoleCursorPosition(HOutput, point);//设置光标位置
 }
 
+void color(short x) //自定义函根据参数改变颜色   
+{  
+    if(x>=0 && x<=15)//参数在0-15的范围颜色  
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);    //只有一个参数，改变字体颜色   
+    else//默认的颜色白色  
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);  
+}  
+
+//隐藏光标
+void HideCursor()
+{
+CONSOLE_CURSOR_INFO cursor_info = {1, 0}; 
+SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+}
+
+//失败声音
+void pf1()
+{
+		// 打开音乐
+    mciSendString("open 失败.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
+
+       Sleep(1500);
+// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
+}
+
+
+//成功声音
+void pf2()
+{
+		// 打开音乐
+    mciSendString("open 战斗胜利.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
+
+       Sleep(1500);
+
+// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
+}
+
+//进入系统声音
+void pf3()
+{
+		// 打开音乐
+    mciSendString("open 3530.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
+
+       Sleep(4000);
+
+// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
+}
+
+//记录时间
 void time1()
 {	
+	
 	while(sec>60)
 	  {
 		   minl++;
@@ -86,30 +154,56 @@ void time1()
 void cause(int c1,int c2,int all)
 {
 //	double cpu_time=0.0;
+	system("color B4");
 	printf("\n\n\n\t\t\t\t★最终得分：%d\t\t",c1*10);
-	printf("正确个数：%d\t\t",c1);
+	//printf("正确个数：%d\t\t",c1);
     printf("错误个数：%d\n",c2);
 	if(c1!=0)
 	  printf("\t\t\t\t★正确率：%.2f",((c1*10.0)/(all*10))*100);
 	else
-      printf("\t\t\t\t正确率：0");
+      printf("\t\t\t\t★正确率：0");
     //calendar_end=time(NULL);
 	//end=clock();
 	//cpu_time=(double)(end-start)/CLOCKS_PER_SEC;
 	//printf("\n\t\t\t\t★CPU用时：%.3lf秒\t\t",cpu_time);
-	printf("\n\t\t\t\t★完成用时：%02d:%02d:%02d\n\n",hour,minl,sec);
+	//printf("\n\t\t\t\t★完成用时：%02d:%02d:%02d\n\n",hour,minl,sec);
+	time1();
 	if(c1*10==(all*10)&&c1!=0)
 		printf("\t\t\t\t★宝贝真棒！下次继续努力哦\n");
 	else if(c1*10==0)
 		printf("\t\t\t\t★宝贝应该努力了哦\n");
 	else
         printf("\t\t\t\t★宝贝不要灰心，还差一点点就满分了\n");
+	system("pause");
 }
 //产生随机数1或2
 int getnode()
 {
 	srand(time(NULL));
 	return rand()%2+1;
+}
+
+//三秒钟开始
+void time_2()
+{
+	for(sec=1;sec<=3;sec++)
+	{
+		if(sec==1)
+			color(4);
+		else if(sec==2)
+			color(5);
+		else
+			color(6);
+		printf("\n\n\n\n\t\t\t\t\t\t-*%d",sec);
+		Sleep(1000);
+		system("cls");
+	}
+	printf("\n\n\n\n\t\t\t\t\tReady!\n");
+	Sleep(800);
+	system("cls");
+	printf("\n\n\n\n\t\t\t\t\tGo!\n");
+	Sleep(800);
+	system("cls");
 }
 
 //产生不重复的数
@@ -138,37 +232,53 @@ void timer()
 	time_str=time(&time_str);
 	time_p=localtime(&time_str);
 	//printf("%d %d %d %d:%d:%d",(time_p->tm_year)+1900,time_p->tm_mon+1,time_p->tm_mday,time_p->tm_hour,time_p->tm_min,time_p->tm_sec);
-	if((fp=fopen("time.txt","a+"))==NULL)
+	if((fp=fopen("time.txt","ab+"))==NULL)
 	{
 		printf("can't open this file!");
 		exit(0);
 	}
 	 
-		fprintf(fp,"%-5d%-3d%-3d%-3d%-3d%-3d%f",time_p->tm_year+1900,time_p->tm_mon+1,time_p->tm_mday,time_p->tm_hour,time_p->tm_min,time_p->tm_sec,((all*10.0)/(c1*10))*100);//记录当前用户所做的时间点
+		fprintf(fp,"%-6d%-4d%-4d%-4d%-4d%-4d%-4d",time_p->tm_year+1900,time_p->tm_mon+1,time_p->tm_mday,time_p->tm_hour,time_p->tm_min,time_p->tm_sec,((c1*10)/(all*10))*100);//记录当前用户所做的时间点
 	fclose(fp);
 
 
 }
+
 //读出时间
 void timer_read()
 {
 	FILE *fp;
-	float t;
+	int t;
 	int year=0,mon=0,day=0,hour=0,min=0,sec=0;
+	system("color C");
 	if((fp=fopen("time.txt","r"))==NULL)
 	{
 		printf("can't open this file!");
 		exit(0);
 	}
-	printf("\n\n\n\n\t\t\t\t                     ¤  历史记录  ¤\n");
-	printf("\n\n\n\n\t\t\t\t^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+	color(3);
+	 printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃                 ╮(￣▽ ￣)╭  历史记录\n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
 	while(!feof(fp))
 	{
-		if(fscanf(fp,"%d%d%d%d%d%d%f",&year,&mon,&day,&hour,&min,&sec,&t)!=EOF)
-		    printf("\t\t\t\t|时间：%d.%d.%d %02d:%02d:%02d\t正确率：%.3f|\n",year,mon,day,hour,min,sec,t);
+		if(fscanf(fp,"%d%d%d%d%d%d%d",&year,&mon,&day,&hour,&min,&sec,&t)!=EOF)
+		{
+			if(t==100)
+				color(1);
+			else if(t>=70)
+				color(5);
+			else if(t>=60)
+				color(6);
+			else
+				color(4);
+			  printf("\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	          printf("\t\t┃时间：%d.%d.%d %02d:%02d:%02d\t正确率：%d                                \n",year,mon,day,hour,min,sec,t);  
+	          printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+		}
 	}
-	printf("\t\t\t\t^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
 	fclose(fp);
+	system("pause");
 }
 
 
@@ -178,8 +288,8 @@ void timer_read()
 void choice_3()
 {
 	
-	printf("\n\n\t\t\t\t请输入你要做的题数(1-%d):\n",k);
-	setPos(10,7);
+	printf("\n\n\t\t\t\t★请输入你要做的题数(1-%d):\n",k);
+	setPos(40,7);
     scanf("%d",&all);
 	system("cls");
 	
@@ -194,25 +304,28 @@ void doAdd(int flag_1)
 	char sign1='+';
 	x=c1=c2=0;
 	srand(time(NULL));
-	if(flag_1)
+	if(flag_1==1)
 	   choice_3();
-	//choice1(num);
+	system("color E4");
 	printf("\n\n\t\t\t\t●三秒后开始\n\n");
+	 time_2();
 	start=time(NULL);//开始时间
-    Sleep(3000);
-   printf("\t\t\t\t●现在开始\n\n");
-	system("cls");//清屏
-	sec=3;
+	sec=0;
 	while(i<=all)
 	{
+  // 打开音乐
+    mciSendString("open 3530.mp3 alias mymusic", NULL, 0, NULL);
+
+    // 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
 		choice1(num);//产生随机数
-		p=rand()%k-1;//产生下标随机数
+		p=rand()%(k-1);//产生下标随机数
 		a=num[index];
 		b=num[p];
        while(a+b>k&&index<k-1)//使两者相加小于选择的题的范围k
 	   {
 		   	a=num[index];
-			p=rand()%k-1;
+			p=rand()%(k-1);
 		    b=num[p];
 		   index++;
 		   flag=0;
@@ -230,6 +343,7 @@ void doAdd(int flag_1)
 	   {
 		   if(minl==time_1)
 		   {
+			   color(4);
 			    printf("\n\n\t\t\t\t★挑战失败！★\n\n");
 			    printf("\n\n\t\t\t\t<1> 继续\t<2> 退出\n");
 			    printf("\n\t\t\t\t\t请选择：");
@@ -256,33 +370,36 @@ void doAdd(int flag_1)
 /******************减法模块*******************************************/
 void doSub(int flag_1)
 {
-	int a=-1,b=0,sum1,d,i=1,k=1,r;
+	int a=-1,b=0,sum1,d,i=1,r;
 	char sign1='-';
 	int num[100],index,flag=1,p=0;
 	index=0;
 	x=c1=c2=0;
+	system("color E4");
 	start=time(NULL);//开始时间
 	srand(time(NULL));
-	if(flag_1)
+	if(flag_1==1)
 	   choice_3();
 	printf("\n\n\t\t\t\t●三秒后开始\n\n");
+    time_2();
+	sec=0;
 	start=time(NULL);//开始时间
-    Sleep(3000);
-   printf("\t\t\t\t●现在开始\n\n");
-	system("cls");//清屏
-	sec=3;
-	//choice1(num);
 	while(i<=all)
 	{
+			// 打开音乐
+    mciSendString("open 3530.mp3 alias mymusic", NULL, 0, NULL);
+
+// 播放音乐
+    mciSendString("play mymusic", NULL, 0, NULL);
 		   choice1(num);
 	       a=num[index];
-		   	p=rand()%k-1;
+		   	p=rand()%(k-1);
 		   b=num[p];	
 		while(a<b&&index<k-1)//使两者相减不小于0
 		{
 			
            a=num[index];
-		   p=rand()%k-1;
+		   p=rand()%(k-1);
 		   b=num[p];
 		   index++;
 		   flag=0;
@@ -298,7 +415,7 @@ void doSub(int flag_1)
 	 {
 		   if(minl==time_1)
 		   {
-			    printf("\n\n\t\t\t\t★挑战失败！★\n\n");
+			    printf("\n\n\t\t\t\t★挑战失败!…(⊙_⊙;)… ○\n\n");
 			    printf("\n\n\t\t\t\t<1> 继续\t<2> 退出\n");
 			    printf("\n\t\t\t\t\t请选择：");
 		         scanf("%d",&r);
@@ -373,17 +490,42 @@ void doSub1(int num[],int all,int a,int b,int sum1,char sign1)
 void caculate(int all,int a,int b,int c,int sum,char sign,char sign1)
 {
 	int sum1;
+	char i;
 	scanf("%d",&sum1);
+	if(sum1==0)
+	{
+		 HideCursor();
+		printf("\n\n\t\t\t是否退出程序\n");
+		printf("\n\t\t\t<1>是\t<2>否\n");
+		i=getch();
+		if(i==49)
+			menu();
+	}
 	printf("\n");
 	
 	if(sum==sum1)
 	{
-		printf("\t\t\t\t★回答正确\t");
+	
+			// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
+		   pf2();
+		   color(5);
+		   printf("\t\t\t\t★回答正确≧◇≦\t");
+		   Sleep(100);
+	
 		c1++;
 	}
 	else 
 	{
-		printf("\t\t\t\t★回答错误！\t");
+	
+			// 停止播放并关闭音乐
+           mciSendString("stop mymusic", NULL, 0, NULL);
+           mciSendString("close mymusic", NULL, 0, NULL);
+		pf1();
+		color(4);
+		printf("\t\t\t\t★回答错误!(*+﹏+*)~@\t");
+		 Sleep(100);
 	    wrongtext(a,sign1,b,sign,c,sum);
 		c2++;
 	}
@@ -426,6 +568,8 @@ void wrong_baocun(struct infortxt *head)
 			word=word->next;
 	}
 	fclose(fp);
+	system("pause");
+	showmenu();
 }
 
 //从文件中读出错题
@@ -461,51 +605,89 @@ void wrong_look()
      struct infortxt *word,*head=NULL;
 	 int i=1;
 	 head=wrongread();
+	 system("color 5");
 	 word=head->next;
+	 if(word==NULL)
+		 printf("\n\n\t\t\t\t现在还没有错题！\n\n");
+	 printf("\n\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	 printf("\t\t┃                    错题本    \n");
+	 printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
 	 while(word!=NULL)
 	 {
-		 printf("\t\t\t\t<%d> %d%c%d%c%d%c%d\n",i,word->a,word->a1,word->b,word->a2,word->c,word->a3,word->sum);
+		 if(i%2==0)
+			 color(3);
+		 else
+			 color(4);
+		 printf("\n\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	     printf("\t\t┃                  <%d> %d%c%d%c%d%c%d      \n",i,word->a,word->a1,word->b,word->a2,word->c,word->a3,word->sum);
+	     printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+		 if(i%8==0)
+		 {
+			 system("pause");
+			 system("cls");
+			  printf("\n\t\t┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n");
+	           printf("\t\t┃                    错题本    \n");
+	           printf("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
+
+			 
+		 }
 		 i++;
 		 word=word->next;
 	 }
+	 //system("pause");
 }
 
 //练习错题
 void exertise()
 {
+	system("color 9");
 	struct infortxt *word,*head=NULL,*p1;
 	int i=1,sum1,row=0;
     head=wrongread();
-	word=head->next->next;
+	word=head;
 	start=time(NULL);
 	c1=x=0;
-	while(word!=NULL)
+	if(word->next==NULL)
+		 printf("\n\n\t\t\t\t现在还没有错题!:-P\n\n");
+	while(word->next!=NULL)
 	 {
 		time1();
 		x++;
-		 printf("\t\t\t\t\t<%d> %d%c%d%c%d%c\n",i,word->a,word->a1,word->b,word->a2,word->c,word->a3);
-		 setPos(54,12-row);
-		 row=7;//移动光标
+		 printf("\t\t\t\t\t<%d> %d%c%d%c%d%c\n",i,word->next->a,word->next->a1,word->next->b,word->next->a2,word->next->c,word->next->a3);
+		 setPos(54,5);
+		 //移动光标
 		 scanf("%d",&sum1);
-		 if(sum1==word->sum)
+		 if(sum1==word->next->sum)
 		 {
-			 printf("\t\t\t\t\t★回答正确\n\n");
-			 c1++;
+			 color(5);
+			 printf("\t\t\t\t\t★回答正确≧◇≦\n\n");
+			 pf2();
+			 //Sleep(1000);
+			 c1++; 
+			 word=word->next;
 		 }
 		 else
 		 {
-			 printf("\t\t\t\t\t★回答错误!\n\n");
+			 color(4);
+			 printf("\t\t\t\t\t★回答错误!(×_×)\n\n");
+			 pf1();
+			 //Sleep(1000);
 			 p1=word->next;
-			 free(word);
-			 word=p1;
+			 word->next=word->next->next;
+			 free(p1);
 		 }
 		end=time(NULL);
 	   sec=(int)difftime(end,start);
 	   system("cls");
-		 i++;
-		 word=word->next;
+		 i++;//做题个数
+		
 	 }
+	system("color B5");
+	printf("\n\n\n\t\t\t\t★★★★★★★★★★★★★★★★★★★\n");
+	printf("\t\t\t\t★消灭题数：%d\t待消灭题数：%d      ★\n",c1,x-c1);
+	printf("\t\t\t\t★★★★★★★★★★★★★★★★★★★\n");
 	wrong_baocun(head);
+
 }
 
 
@@ -522,10 +704,13 @@ void jump()
 
 void tshi_1()
 {
+	system("color 81");
 	printf("\t\t\t\t\t======================\n");
 	printf("\t\t\t\t\t[请在%d分钟内完成%d道题]\n\n",time_1,all);
 	printf("\t\t\t\t\t======================\n\n");
-	printf("\t\t\t\t\t马上开始做题：\n\n");
+	Sleep(2000);
+	system("cls");
+	printf("\n\n\n\n\t\t\t\t\t马上开始做题：\n\n");
 }
 
 
@@ -535,6 +720,7 @@ void choice_2(int age)
 	int d;
 	double timer=0.0;
 	d=getnode();
+	system("cls");
 	switch(d)
 	{
 	         case 1:
@@ -556,79 +742,81 @@ void choice_2(int age)
 //挑战模块
 void challeng()
 {
-	int age;
-	printf("                       ----------------------------------------------------  \n");
-	printf("                       |温馨提示：                                          |\n");
-	printf("                       |  请输入正确的数字，进入不同的挑战模块              |\n");
-    printf("                       ----------------------------------------------------  \n");
+	char age;
+	system("color 4");
+	printf("                       +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ \n");
+	printf("                       |温馨提示：                                               |\n");
+	printf("                       |  请输入正确的数字,越往下难度越高，进入不同的挑战模块    |\n");
+    printf("                       +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("\n\n\n");
+	color(2);
 	printf("\t\t\t[     青铜   1         ]\n");
 	printf("\n\n");
+	color(3);
 	printf("\t\t\t[     白银   2         ]\n");
 	printf("\n\n");
+	color(4);
 	printf("\t\t\t[     黄金   3         ]\n");
 	printf("\n\n");
+	color(5);
 	printf("\t\t\t[     钻石   4         ]\n");
 	printf("\n\n");
+	color(6);
 	printf("\t\t\t[     王者   5         ]\n");
 	printf("\n\n");
 	printf("\t\t\t请选择要挑战的等级：\n");
-	scanf("%d",&age);
+    age=getch();
 	switch(age)
 	   {
-        	case 1:time_1=10;k=20;all=20;choice_2(age);break;
-	        case 2:time_1=8;k=40;all=30;choice_2(age);break;
-			case 3:time_1=6;k=60;all=40;choice_2(age);break;
-			case 4:time_1=4;k=80;all=50;choice_2(age);break;
-			case 5:time_1=2;k=100;all=60;choice_2(age);break;
+        	case 49:time_1=10;k=20;all=10;choice_2(age);break;
+	        case 50:time_1=8;k=40;all=15;choice_2(age);break;
+			case 51:time_1=6;k=60;all=20;choice_2(age);break;
+			case 52:time_1=4;k=80;all=25;choice_2(age);break;
+			case 53:time_1=2;k=100;all=30;choice_2(age);break;
 			default:menu();break;
 			
 	   }
+	system("cls");
 
 }
 
 void tshi()
 {
-	printf("                           \t -------------------------------------\n");
-	printf("                           \t|温馨提示：                          |\n");
-	printf("                           \t|  在操作过程中按0键返回主菜单     |\n");
-    printf("                           \t-------------------------------------\n");
+	printf("\n\n\n");
+	printf("\t\t\t\t==================================================================== \n");
+	printf("\t\t\t\t|温馨提示：(￣(工)￣)                                               |\n");
+	printf("\t\t\t\t|  在操作过程中请输入数字，按0退出程序                              |\n");
+    printf("\t\t\t\t|其他输入，可能会出现意想不到的事情                                 |\n");
+    printf("\t\t\t\t====================================================================\n");
+	printf("\n\n\n\t\t\t\t\t              ------指导老师：曹琼");
 	printf("\n");
-	printf("\n");
+	//Sleep(3000);
 }
 
 /*******************主菜单********************************************/
 void showmenu()
 {
-	printf("                           ***********************************************************************\n");
-	printf("\n");
+	printf("                           ===============================================================\n");
 	printf("\n");
 	printf("                                      ||||||欢迎进入小学生100以内三位整数加减法|||||\n");
     printf("\n");
-	printf("\n");
-    printf("                           ***********************************************************************\n");
-	printf("\n");
+    printf("                           ===============================================================\n");
 	printf("\n");
 	printf("\n");
 	printf("\n");
-	printf("                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
-	printf("                                            $$练习模块   1 $$\n");
+	printf("                           ◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆\n");
+	printf("                                            ▓练习模块   1 \n");
 	printf("\n");
+	printf("                                            ▓错题模块   2 \n");
 	printf("\n");
-	printf("                                            $$错题模块   2 $$\n");
+	printf("                                            ▓挑战模块   3 \n");
 	printf("\n");
+	printf("                                            ▓无尽模块   4 \n");
 	printf("\n");
-	printf("                                            $$挑战模块   3 $$\n");
+	printf("                                            ▓历史记录   5 \n");
+	printf("                           ◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆\n");
 	printf("\n");
-	printf("\n");
-	printf("                                            $$无尽模块   4 $$\n");
-	printf("\n");
-	printf("\n");
-	printf("                                            $$历史记录   5 $$\n");
-	printf("                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
-	printf("\n");
-	printf("\n");
-	printf("请选择：\n");
+	//printf("请选择：\n");
 }
 
 //退出模块
@@ -640,22 +828,23 @@ void sysExit()
 //错题目录
 void wrongmenu()
 {
-	char i;
-	printf("                          --------------------------------------------------------------------------\n");
-	printf("                                                         ☆ 1 浏览错题\n");
-	printf("\n");
-	printf("\n");
-	printf("                                                         ☆ 2 练习错题\n");
-	printf("                          --------------------------------------------------------------------------\n");
-	printf("请选择：");
-	i=getchoice();
-	wrongread();
+	 char i;
+     system("color B6");                    
+     printf("\n\n\n\t\t\t\t            (oo) \n\n");
+     printf("\t\t\t\t   /-------\\/☆ 1 浏览错题\n\n"); 
+     printf("\t\t\t\t / |         || \n\n"); 
+     printf("\t\t\t*    ||----||      ☆ 2 练习错题\n\n");
+     printf("\t\t\t\t     ~~    ~~  \n\n");
+	  printf("\t\t\t\t请选择：");
+	  setPos(35,16);
+	i=getch();
+	system("cls");
     switch(i)
 	 {
-        	case 1:wrong_look();
+        	case 49:wrong_look();
 				   break;
 	            	
-	        case 2:exertise();break;
+	        case 50:exertise();break;
 			default:menu();break;
 	}
 }
@@ -673,8 +862,8 @@ int getchoice()
 void choose()
 {
 	
-	printf("\t\t\t\t★请输入你要做题的大小范围(1-100)：\n");
-	setPos(15,3);
+	printf("\n\n\t\t\t\t★请输入你要做题的大小范围(1-100)：\n");
+	setPos(40,3);
 	scanf("%d",&k);
 }
 
@@ -710,24 +899,26 @@ void choose()
 void menu()
 {
 	int d;
-	int choice;
+	char choice;
     all=x=0;
-	system("color 2D");
-	tshi();
+	system("color B2");
+    system("cls");
 	while(1)
 	{
 		
 		//calendar_start=time(NULL);//用户开始时间
 		k=0;
 		//start=clock();//处理器运行时间
+		system("cls");
+		system("color B5");
 		showmenu();
-	  choice=getchoice();
+	  choice=getch();
 	  system("cls");
        switch(choice)
 	   {
-        	case 1:
+        	case 49:
 				choose();
-				    d=getnode();
+				d=getnode();
                    switch(d)
 				   {
 	                    case 1:doAdd(1);break;
@@ -735,28 +926,47 @@ void menu()
 				   };
 				   break;
 	            	
-	        case 2:wrongmenu();break;
-			case 3:challeng();break;
-			case 4:
+	        case 50:wrongmenu();break;
+			case 51:challeng();break;
+			case 52:
 				k=100;
 				all=10000000;
 				d=getnode();
                 switch(d)
 				 {
-	                    case 1:doAdd(0);break;
-	                    case 2:doSub(0);break;
+	                    case 1:doAdd(4);break;
+	                    case 2:doSub(4);break;
 				 };
 				break;
-			case 5:timer_read();break;
+			case 53:timer_read();break;
 			default:menu();break;
 			
 	   }
-	  timer();
+     if(choice!=5)
+	   timer();//记录时间
 	}
+
 
 }
 void main()
 {
+	int i;
+	tshi();
+//	pf();
+	for(i=0;i<5;i++)
+	{
+		
+			
+			system("color 04");	
+			Sleep(20);
+			system("color 05");
+		    Sleep(20);
+		    system("color 06");
+			Sleep(20);
+	
+
+	}
+      Sleep(3000);
 	menu();
 	system("pause");
 }
